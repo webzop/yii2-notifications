@@ -11,16 +11,6 @@ class Module extends \yii\base\Module
     public $channels = [];
 
     /**
-     * @inheritdoc
-     */
-    public function __construct($config = [])
-    {
-        $this->registerCoreChannels();
-
-        parent::__construct($config);
-    }
-
-    /**
      * Send a notification to all channels
      *
      * @param Notification $notification
@@ -75,18 +65,6 @@ class Module extends \yii\base\Module
 
     protected function createChannel($id, $config){
         return Yii::createObject($config, [$id]);
-    }
-
-    protected function registerCoreChannels(){
-        $this->channels = [
-            'screen' => [
-                'class' => 'webzop\notifications\channels\ScreenChannel',
-            ],
-            'email' => [
-                'class' => 'webzop\notifications\channels\EmailChannel',
-            ]
-
-        ];
     }
 
 }
