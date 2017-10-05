@@ -1,0 +1,94 @@
+.nav-notifications .dropdown-menu {
+    width: 260px;
+    padding: 0;
+    margin-top: 3px !important;
+}
+.nav-notifications .header {
+    border-bottom: 1px solid #e5e5e5;
+    display: block;
+    padding: .5rem 12px;
+    color: #868e96;
+    white-space: nowrap;
+
+}
+.nav-notifications .footer {
+    background-color: #f5f5f5;
+    white-space: nowrap;
+    border-top: 1px solid #e5e5e5;
+    text-align: center;
+}
+.nav-notifications .empty-row {
+    display: none;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    color: #868e96;
+    padding: .5rem 12px;
+}
+.nav-notifications .empty-row:only-child {
+    display: table;
+}
+.nav-notifications .empty-row>span {
+    display: table-cell;
+    vertical-align: middle;
+}
+.notification-item {
+    position: relative;
+    background-color: #f6f6fc;
+    border-bottom: 1px solid #f1f1f1;
+    white-space: nowrap;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-right: 60px;
+}
+.notification-item:last-child {
+    border-bottom: 0;
+}
+.notification-item.read {
+    background-color: #fff;
+}
+.notification-item:hover {
+    background-color: #f9f9fc;
+}
+.notification-item .icon {
+    width: 18px;
+    display: inline-block;
+}
+.notification-item[data-key="new_order"] .icon:before {
+    content: "*";
+    color: #00a65a;
+}
+.notification-item[data-key="cancelled_order"] .icon:before {
+    content: "*";
+    color: #e98400;
+}
+.notification-item[data-key="failed_order"] .icon:before {
+    content: "*";
+    color: #e90805;
+}
+.notification-item[data-key="new_account"] .icon:before {
+    content: "*";
+    color: #248292;
+}
+.notification-item .timeago {
+    color: #999999;
+    font-size: 10px;
+    position: absolute;
+    right: 8px;
+    top: 4px;
+}
+.notification-item .mark-read {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    right: 8px;
+    bottom: 7px;
+}
+.notification-item:hover .mark-read {
+    background-color: #94bddd;
+}
+.notification-item.read:hover .mark-read {
+    background-color: #bcbcbc;
+}

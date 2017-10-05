@@ -1,2 +1,2 @@
 # yii2-notifications
-Yii2 module to provide a notification managing system
+This module provide a notifications managing system for your yii2 application.
