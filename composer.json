@@ -11,7 +11,9 @@
     "authors": [
         {
             "name": "Gonçalo Esteves",
-            "email": "goncalo.p.esteves@gmail.com"
+            "email": "goncalo.p.esteves@gmail.com",
+            "homepage": "https://webzop.com",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -22,6 +24,9 @@
         "psr-4": {
             "webzop\\notifications\\": ""
         }
+    },
+    "extra": {
+        "bootstrap": "webzop\\notifications\\Bootstrap"
     },
     "repositories": [
         {

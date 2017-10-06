@@ -7,8 +7,7 @@ use yii\web\Controller;
 use yii\db\Query;
 use yii\data\Pagination;
 use yii\helpers\Url;
-//use backend\widgets\Notifications;
-//use yii\helpers\Formatter;
+use webzop\notifications\helpers\TimeElapsed;
 
 class DefaultController extends Controller
 {
@@ -83,7 +82,7 @@ class DefaultController extends Controller
             return $this->ajaxResponse(1);
         }
 
-        Yii::$app->getSession()->setFlash('success', Yii::t('app', 'All notifications have been marked as read.'));
+        Yii::$app->getSession()->setFlash('success', Yii::t('modules/notifications', 'All notifications have been marked as read.'));
 
         return Yii::$app->getResponse()->redirect(['/notifications/default/index']);
     }
@@ -96,7 +95,7 @@ class DefaultController extends Controller
             return $this->ajaxResponse(1);
         }
 
-        Yii::$app->getSession()->setFlash('success', Yii::t('app', 'All notifications have been deleted.'));
+        Yii::$app->getSession()->setFlash('success', Yii::t('modules/notifications', 'All notifications have been deleted.'));
 
         return Yii::$app->getResponse()->redirect(['/notifications/default/index']);
     }
@@ -110,8 +109,7 @@ class DefaultController extends Controller
             }
             $route = @unserialize($notif['route']);
             $notif['url'] = !empty($route) ? Url::to($route) : '';
-            //$notif['timeago'] = Formatter::timeElapsed($notif['created_at']);
-            $notif['timeago'] = $notif['created_at'];
+            $notif['timeago'] = TimeElapsed::timeElapsed($notif['created_at']);
             $notifs[] = $notif;
         }
 
