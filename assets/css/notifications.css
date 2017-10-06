@@ -6,7 +6,7 @@
 .nav-notifications .header {
     border-bottom: 1px solid #e5e5e5;
     display: block;
-    padding: .5rem 12px;
+    padding: 8px 12px;
     color: #868e96;
     white-space: nowrap;
 
@@ -39,8 +39,8 @@
     white-space: nowrap;
     cursor: pointer;
     text-overflow: ellipsis;
-    overflow: hidden;
-    padding-right: 60px;
+    _overflow: hidden;
+    padding: 9px 60px 9px 14px;
 }
 .notification-item:last-child {
     border-bottom: 0;
@@ -54,21 +54,28 @@
 .notification-item .icon {
     width: 18px;
     display: inline-block;
+    position: relative;
+    top: 1px;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
 }
 .notification-item[data-key="new_order"] .icon:before {
-    content: "*";
+    content: "\e028";
     color: #00a65a;
 }
 .notification-item[data-key="cancelled_order"] .icon:before {
-    content: "*";
+    content: "\e209";
     color: #e98400;
 }
 .notification-item[data-key="failed_order"] .icon:before {
-    content: "*";
+    content: "\e162";
     color: #e90805;
 }
 .notification-item[data-key="new_account"] .icon:before {
-    content: "*";
+    content: "\e008";
     color: #248292;
 }
 .notification-item .timeago {
