@@ -8,6 +8,7 @@ use yii\db\Query;
 use yii\data\Pagination;
 use yii\helpers\Url;
 use webzop\notifications\helpers\TimeElapsed;
+use webzop\notifications\widgets\Notifications;
 
 class DefaultController extends Controller
 {
@@ -60,7 +61,7 @@ class DefaultController extends Controller
 
     public function actionCount()
     {
-        $count = \webzop\notifications\widgets\Notifications::getCountUnseen();
+        $count = Notifications::getCountUnseen();
         $this->ajaxResponse(['count' => $count]);
     }
 
