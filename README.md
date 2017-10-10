@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="http://s5.webzop.com/21621947_10155695011058377_659334693.jpg" alt="Notifications Module" />
+    <img src="http://5.189.150.145/21621947_10155695011058377_659334693.jpg" alt="Notifications Module" />
 </p>
 
 # yii2-notifications
