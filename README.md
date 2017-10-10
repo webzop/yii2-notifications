@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="http://s5.webzop.com/21621947_10155695011058377_659334693.jpg" alt="Notifications Module" />
+</p>
+
 # yii2-notifications
 This module provides a notifications managing system for your yii2 application.
 
