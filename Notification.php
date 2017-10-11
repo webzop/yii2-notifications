@@ -7,12 +7,9 @@ use Yii;
 /**
  * This is the base class for a notification.
  *
- * @property integer $id
  * @property string $key
- * @property string $type
- * @property boolean $seen
- * @property string $created_at
- * @property integer $user_id
+ * @property integer $userId
+ * @property array $data
  */
 abstract class Notification extends \yii\base\BaseObject
 {
@@ -23,13 +20,18 @@ abstract class Notification extends \yii\base\BaseObject
     public $data = [];
 
     /**
-     * Return a list of valid channels for this notification
-     * If null all channels will be notified
+     * Create an instance
      *
-     * @return array|null
+     * @param string $key
+     * @param array $data additional data information
+     * @return static the newly created Notification
+     * @throws \Exception
      */
-    public function via(){
-        return null;
+    public static function create($key, $data = []){
+        return new static([
+            'key' => $key,
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -77,6 +79,24 @@ abstract class Notification extends \yii\base\BaseObject
         return $this->data;
     }
 
+    public function setData($data = []){
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Gets the UserId
+     *
+     * @return array
+     */
+    public function getUserId(){
+        return $this->userId;
+    }
+
+    public function setUserId($id){
+        $this->userId = $id;
+        return $this;
+    }
 
     /**
      * Alias to Sends a notification to all channels
@@ -89,32 +109,6 @@ abstract class Notification extends \yii\base\BaseObject
     public static function notify($key, $userId, $data = [])
     {
         self::create($key, $data)->setUserId($userId)->send();
-    }
-
-    /**
-     * Create an instance
-     *
-     * @param string $key
-     * @param array $data Additional data information
-     * @return $this
-     * @throws \Exception
-     */
-    public static function create($key, $data = []){
-        $class = self::className();
-        return new $class([
-            'key' => $key,
-            'data' => $data,
-        ]);
-    }
-
-    public function setData($data = []){
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setUserId($id){
-        $this->userId = $id;
-        return $this;
     }
 
     /**
