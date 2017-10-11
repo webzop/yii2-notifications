@@ -19,9 +19,7 @@ class Module extends \yii\base\Module
      */
     public function send($notification, array $channels = null){
         if($channels === null){
-            if(($channels = $notification->via()) === null){
-                $channels = array_keys($this->channels);
-            }
+            $channels = array_keys($this->channels);
         }
 
         foreach ((array)$channels as $id) {
