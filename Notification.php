@@ -23,15 +23,13 @@ abstract class Notification extends \yii\base\BaseObject
      * Create an instance
      *
      * @param string $key
-     * @param array $data additional data information
+     * @param array $params notification properties
      * @return static the newly created Notification
      * @throws \Exception
      */
-    public static function create($key, $data = []){
-        return new static([
-            'key' => $key,
-            'data' => $data,
-        ]);
+    public static function create($key, $params = []){
+        $params['key'] = $key;
+        return new static($params);
     }
 
     /**
@@ -71,7 +69,7 @@ abstract class Notification extends \yii\base\BaseObject
     }
 
     /**
-     * Gets the notification data
+     * Gets notification data
      *
      * @return array
      */
@@ -79,6 +77,11 @@ abstract class Notification extends \yii\base\BaseObject
         return $this->data;
     }
 
+    /**
+     * Sets notification data
+     *
+     * @return self
+     */
     public function setData($data = []){
         $this->data = $data;
         return $this;
@@ -93,22 +96,14 @@ abstract class Notification extends \yii\base\BaseObject
         return $this->userId;
     }
 
+    /**
+     * Sets the UserId
+     *
+     * @return self
+     */
     public function setUserId($id){
         $this->userId = $id;
         return $this;
-    }
-
-    /**
-     * Alias to Sends a notification to all channels
-     *
-     * @param string $key The key of the notification
-     * @param integer $userId The user id that will get the notification
-     * @param array $data Additional data information
-     * @throws \Exception
-     */
-    public static function notify($key, $userId, $data = [])
-    {
-        self::create($key, $data)->setUserId($userId)->send();
     }
 
     /**
