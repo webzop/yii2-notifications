@@ -21,9 +21,9 @@ $this->title = Yii::t('modules/notifications', 'Notifications');
 <div class="page-content">
 
     <ul id="notifications-items">
-        <? if($notifications): ?>
+        <?php if($notifications): ?>
 
-        <? foreach($notifications as $notif): ?>
+        <?php foreach($notifications as $notif): ?>
         <li class="notification-item<? if($notif['read']): ?> read<? endif; ?>" data-id="<?= $notif['id']; ?>" data-key="<?= $notif['key']; ?>">
             <a href="<?= $notif['url'] ?>">
                 <span class="icon"></span>
@@ -33,10 +33,10 @@ $this->title = Yii::t('modules/notifications', 'Notifications');
             <span class="mark-read" data-toggle="tooltip" title="<? if($notif['read']): ?><?= Yii::t('modules/notifications', 'Read') ?><? else: ?><?= Yii::t('modules/notifications', 'Mark as read') ?><? endif; ?>"></span>
 
         </li>
-        <? endforeach; ?>
-        <? else: ?>
+        <?php endforeach; ?>
+        <?php else: ?>
             <li class="empty-row"><?= Yii::t('modules/notifications', 'There are no notifications to show') ?></li>
-        <? endif; ?>
+        <?php endif; ?>
     </ul>
 
     <?= LinkPager::widget(['pagination' => $pagination]); ?>
