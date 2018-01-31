@@ -1,6 +1,6 @@
 <?php
 
-namespace webzop\notifications;
+namespace webzop\notifications\assets;
 
 use yii\web\AssetBundle;
 
@@ -11,11 +11,7 @@ use yii\web\AssetBundle;
  */
 class NotificationsAsset extends AssetBundle
 {
-    /**
-     * @inheritdoc
-     */
-    public $sourcePath = __DIR__.'/assets';
-
+    
     /**
      * @inheritdoc
      */

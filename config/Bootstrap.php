@@ -1,6 +1,6 @@
 <?php
 
-namespace webzop\notifications;
+namespace webzop\notifications\config;
 
 /**
  * notifications module bootstrap class.
