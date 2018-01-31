@@ -3,8 +3,8 @@
 namespace webzop\notifications\channels;
 
 use Yii;
-use webzop\notifications\Channel;
-use webzop\notifications\Notification;
+use webzop\notifications\models\Channel;
+use webzop\notifications\models\Notification;
 
 class ScreenChannel extends Channel
 {
