@@ -13,7 +13,7 @@ class ScreenChannel extends Channel
         $db = Yii::$app->getDb();
         $className = $notification->className();
         $currTime = time();
-        $db->createCommand()->insert('notifications', [
+        $db->createCommand()->insert('{{%notifications}}', [
             'class' => strtolower(substr($className, strrpos($className, '\\')+1, -12)),
             'key' => $notification->key,
             'message' => (string)$notification->getTitle(),
