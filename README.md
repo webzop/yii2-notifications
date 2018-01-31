@@ -60,7 +60,7 @@ Each notification is represented by a single class (typically stored in the  app
 namespace app\notifications;
 
 use Yii;
-use webzop\notifications\Notification;
+use webzop\notifications\models\Notification;
 
 class AccountNotification extends Notification
 {
@@ -168,8 +168,8 @@ This module have a some pre-built channels, but you may want to write your own c
 ```php
 namespace app\channels;
 
-use webzop\notifications\Channel;
-use webzop\notifications\Notification;
+use webzop\notifications\models\Channel;
+use webzop\notifications\models\Notification;
 
 class VoiceChannel extends Channel
 {
