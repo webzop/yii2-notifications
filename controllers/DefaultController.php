@@ -24,7 +24,7 @@ class DefaultController extends Controller
     {
         $userId = Yii::$app->getUser()->getId();
         $query = (new Query())
-            ->from('notifications')
+            ->from('{{%notifications}}')
             ->andWhere(['or', 'user_id = 0', 'user_id = :user_id'], [':user_id' => $userId]);
 
         $pagination = new Pagination([
@@ -50,7 +50,7 @@ class DefaultController extends Controller
     {
         $userId = Yii::$app->getUser()->getId();
         $list = (new Query())
-            ->from('notifications')
+            ->from('{{%notifications}}')
             ->andWhere(['or', 'user_id = 0', 'user_id = :user_id'], [':user_id' => $userId])
             ->orderBy(['id' => SORT_DESC])
             ->limit(10)
@@ -67,7 +67,7 @@ class DefaultController extends Controller
 
     public function actionRead($id)
     {
-        Yii::$app->getDb()->createCommand()->update('notifications', ['read' => 1], ['id' => $id])->execute();
+        Yii::$app->getDb()->createCommand()->update('{{%notifications}}', ['read' => true], ['id' => $id])->execute();
 
         if(Yii::$app->getRequest()->getIsAjax()){
             return $this->ajaxResponse(1);
@@ -78,7 +78,7 @@ class DefaultController extends Controller
 
     public function actionReadAll()
     {
-        Yii::$app->getDb()->createCommand()->update('notifications', ['read' => 1])->execute();
+        Yii::$app->getDb()->createCommand()->update('{{%notifications}}', ['read' => true])->execute();
         if(Yii::$app->getRequest()->getIsAjax()){
             return $this->ajaxResponse(1);
         }
@@ -90,7 +90,7 @@ class DefaultController extends Controller
 
     public function actionDeleteAll()
     {
-        Yii::$app->getDb()->createCommand()->delete('notifications')->execute();
+        Yii::$app->getDb()->createCommand()->delete('{{%notifications}}')->execute();
 
         if(Yii::$app->getRequest()->getIsAjax()){
             return $this->ajaxResponse(1);
@@ -115,7 +115,7 @@ class DefaultController extends Controller
         }
 
         if(!empty($seen)){
-            Yii::$app->getDb()->createCommand()->update('notifications', ['seen' => 1], ['id' => $seen])->execute();
+            Yii::$app->getDb()->createCommand()->update('{{%notifications}}', ['seen' => true], ['id' => $seen])->execute();
         }
 
         return $notifs;

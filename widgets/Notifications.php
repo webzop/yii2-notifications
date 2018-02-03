@@ -99,9 +99,9 @@ class Notifications extends \yii\base\Widget
     public static function getCountUnseen(){
         $userId = Yii::$app->getUser()->getId();
         $count = (new Query())
-            ->from('notifications')
+            ->from('{{%notifications}}')
             ->andWhere(['or', 'user_id = 0', 'user_id = :user_id'], [':user_id' => $userId])
-            ->andWhere(['seen' => FALSE])
+            ->andWhere(['seen' => false])
             ->count();
         return $count;
     }
