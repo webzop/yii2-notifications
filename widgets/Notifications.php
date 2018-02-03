@@ -101,7 +101,7 @@ class Notifications extends \yii\base\Widget
         $count = (new Query())
             ->from('notifications')
             ->andWhere(['or', 'user_id = 0', 'user_id = :user_id'], [':user_id' => $userId])
-            ->andWhere(['seen' => 0])
+            ->andWhere(['seen' => FALSE])
             ->count();
         return $count;
     }
