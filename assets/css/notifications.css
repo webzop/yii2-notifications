@@ -32,6 +32,11 @@
     display: table-cell;
     vertical-align: middle;
 }
+.nav-notifications .label {
+    position: absolute;
+    top: 7px;
+    right: 0;
+}
 .notification-item {
     position: relative;
     background-color: #f6f6fc;
