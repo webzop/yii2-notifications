@@ -32,6 +32,12 @@
     display: table-cell;
     vertical-align: middle;
 }
+
+#notifications-items {
+    list-style-type: none;
+    padding: 5px;
+}
+
 .notification-item {
     position: relative;
     background-color: #f6f6fc;

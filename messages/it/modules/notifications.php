@@ -27,7 +27,7 @@ return [
     'There are no notifications to show' => 'Nessuna notifica da mostrare',
     'View all' => 'Vedi tutto',
     'a moment' => 'un momento',
-    'ago' => 'altro',
+    'ago' => 'fa',
     '{n, plural, one{one day} other{# days}}' => '{n, plural, one{un giorno} other{# giorni}}',
     '{n, plural, one{one hour} other{# hours}}' => '{n, plural, one{un ora} other{# ore}}',
     '{n, plural, one{one minute} other{# minutes}}' => '{n, plural, one{un minuto} other{# minuti}}',
