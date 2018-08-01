@@ -4,6 +4,7 @@ namespace webzop\notifications\widgets;
 
 use Yii;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\helpers\Json;
 use yii\db\Query;
@@ -14,6 +15,19 @@ class Notifications extends \yii\base\Widget
 {
 
     public $options = ['class' => 'dropdown nav-notifications'];
+
+    /**
+     * @var string the HTML options for the item count tag. Key 'tag' might be used here for the tag name specification.
+     * For example:
+     *
+     * ```php
+     * [
+     *     'tag' => 'span',
+     *     'class' => 'badge badge-warning',
+     * ]
+     * ```
+     */
+    public $countOptions = [];
 
     /**
      * @var array additional options to be passed to the notification library.
@@ -43,15 +57,32 @@ class Notifications extends \yii\base\Widget
      */
     public function run()
     {
+        echo $this->renderNavbarItem();
+
+        $this->registerAssets();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function renderNavbarItem()
+    {
         $html  = Html::beginTag('li', $this->options);
         $html .= Html::beginTag('a', ['href' => '#', 'class' => 'dropdown-toggle', 'data-toggle' => 'dropdown']);
         $html .= Html::tag('span', '', ['class' => 'glyphicon glyphicon-bell']);
+
         $count = self::getCountUnseen();
-        $countOptions = ['class' => 'badge badge-warning navbar-badge notifications-count', 'data-count' => $count];
+        $countOptions = array_merge([
+            'tag' => 'span',
+            'data-count' => $count,
+        ], $this->countOptions);
+        Html::addCssClass($countOptions, 'label label-warning navbar-badge notifications-count');
         if(!$count){
             $countOptions['style'] = 'display: none;';
         }
-        $html .= Html::tag('span', $count, $countOptions);
+        $countTag = ArrayHelper::remove($countOptions, 'tag', 'span');
+        $html .= Html::tag($countTag, $count, $countOptions);
+
         $html .= Html::endTag('a');
         $html .= Html::begintag('div', ['class' => 'dropdown-menu']);
         $header = Html::a(Yii::t('modules/notifications', 'Mark all as read'), '#', ['class' => 'read-all pull-right']);
@@ -68,9 +99,7 @@ class Notifications extends \yii\base\Widget
         $html .= Html::endTag('div');
         $html .= Html::endTag('li');
 
-        echo $html;
-
-        $this->registerAssets();
+        return $html;
     }
 
     /**
@@ -99,9 +128,9 @@ class Notifications extends \yii\base\Widget
     public static function getCountUnseen(){
         $userId = Yii::$app->getUser()->getId();
         $count = (new Query())
-            ->from('notifications')
+            ->from('{{%notifications}}')
             ->andWhere(['or', 'user_id = 0', 'user_id = :user_id'], [':user_id' => $userId])
-            ->andWhere(['seen' => 0])
+            ->andWhere(['seen' => false])
             ->count();
         return $count;
     }

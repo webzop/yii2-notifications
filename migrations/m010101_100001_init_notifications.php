@@ -25,17 +25,15 @@ class m010101_100001_init_notifications extends Migration
             'key' => $this->string(32)->notNull(),
             'message' => $this->string(255)->notNull(),
             'route' => $this->string(255)->notNull(),
-            'seen' => $this->boolean()->notNull()->defaultValue(0),
-            'read' => $this->boolean()->notNull()->defaultValue(0),
+            'seen' => $this->boolean()->notNull()->defaultValue(false),
+            'read' => $this->boolean()->notNull()->defaultValue(false),
             'user_id' => $this->integer(11)->unsigned()->notNull()->defaultValue(0),
             'created_at' => $this->integer(11)->unsigned()->notNull()->defaultValue(0),
         ], $tableOptions);
-        $this->createIndex('index_2', 'notifications', ['user_id']);
-        $this->createIndex('index_3', 'notifications', ['created_at']);
-        $this->createIndex('index_4', 'notifications', ['seen']);
+        $this->createIndex('index_2', '{{%notifications}}', ['user_id']);
+        $this->createIndex('index_3', '{{%notifications}}', ['created_at']);
+        $this->createIndex('index_4', '{{%notifications}}', ['seen']);
 
-
-        //$this->createIndex('idx-Comment-entity', '{{%Comment}}', 'entity');
     }
 
     /**

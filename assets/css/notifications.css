@@ -38,6 +38,12 @@
     padding: 5px;
 }
 
+.nav-notifications .label {
+    position: absolute;
+    top: 7px;
+    right: 0;
+}
+
 .notification-item {
     position: relative;
     background-color: #f6f6fc;
