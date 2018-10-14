@@ -12,11 +12,6 @@ $this->title = Yii::t('modules/notifications', 'Notifications');
         <a class="btn btn-danger" href="<?= Url::toRoute(['/notifications/default/delete-all']) ?>"><?= Yii::t('modules/notifications', 'Delete all'); ?></a>
         <a class="btn btn-secondary" href="<?= Url::toRoute(['/notifications/default/read-all']) ?>"><?= Yii::t('modules/notifications', 'Mark all as read'); ?></a>
     </div>
-
-    <h1>
-        <span class="icon icon-bell"></span>
-        <a href="<?= Url::to(['/notifications/manage']) ?>"><?= Yii::t('modules/notifications', 'Notifications') ?></a>
-    </h1>
 </div>
 
 <div class="page-content">
@@ -26,12 +21,11 @@ $this->title = Yii::t('modules/notifications', 'Notifications');
         <?php foreach($notifications as $notif): ?>
         <li class="notification-item<?php if($notif['read']): ?> read<?php endif; ?>" data-id="<?= $notif['id']; ?>" data-key="<?= $notif['key']; ?>">
             <a href="<?= $notif['url'] ?>">
-                <span class="icon"></span>
+                <i class="fa fa-comment"></i>
                 <span class="message"><?= Html::encode($notif['message']); ?></span>
             </a>
             <small class="timeago"><?= $notif['timeago']; ?></small>
-            <span class="mark-read" data-toggle="tooltip" title="<?php if($notif['read']): ?><?php Yii::t('modules/notifications', 'Read') ?><?php else: ?><?= Yii::t('modules/notifications', 'Mark as read') ?><?php endif; ?>"></span>
-
+            <span class="mark-read" data-toggle="tooltip" title="<?php if($notif['read']): ?><?= Yii::t('modules/notifications', 'Read') ?><?php else: ?><?= Yii::t('modules/notifications', 'Mark as read') ?><?php endif; ?>"></span>
         </li>
         <?php endforeach; ?>
         <?php else: ?>
