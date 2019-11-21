@@ -38,6 +38,7 @@ class Module extends \yii\base\Module
                 }
             } catch (\Exception $e) {
                 Yii::warning("Notification sended by channel '$id' has failed: " . $e->getMessage(), __METHOD__);
+                Yii::warning($e, __METHOD__);
             }
         }
     }
