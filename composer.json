@@ -11,6 +11,7 @@
         "yii2-screen-notifications",
         "yii2-email-notifications"
     ],
+    "homepage": "https://github.com/niciz/yii2-notifications",
     "authors": [
         {
             "name": "Gonçalo Esteves",
@@ -19,6 +20,7 @@
             "role": "Developer"
         }
     ],
+    "license": "MIT",
     "require": {
         "php": ">=7.1",
         "yiisoft/yii2": "~2.0.13",
