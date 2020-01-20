@@ -7,6 +7,17 @@ Notifications are short messages that notify users of something that occurred in
     <img src="http://5.189.150.145/21621947_10155695011058377_659334693.jpg" alt="Yii2 Notifications Module" />
 </p>
 
+Requirements
+------------
+
+- PHP 7.1+
+    - gmp
+    - mbstring
+    - curl
+    - openssl
+    
+- PHP 7.2+ is recommended for better performance.
+
 Installation
 ------------
 
@@ -46,10 +57,34 @@ Notifications is often used as an application module and configured in the appli
                         'from' => 'example@email.com'
                     ],
                 ],
+                'web' => [
+                    'class' => 'webzop\notifications\channels\WebChannel',
+                    'enable' => true,                                   // OPTIONAL (default: false) enable/disable web channel
+                    'auth' => [
+                        'VAPID' => [
+                            'subject' => 'mailto:me@website.com',       // can be a mailto: or your website address
+                            'publicKey' => '~88 chars',                 // (recommended) uncompressed public key P-256 encoded in Base64-URL
+                            'privateKey' => '~44 chars',                // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
+                            'pemFile' => 'path/to/pem',                 // if you have a PEM file and can link to it on your filesystem
+                            'pem' => 'pemFileContent',                  // if you have a PEM file and want to hardcode its content
+                            'reuseVAPIDHeaders' => true                 // OPTIONAL (default: true) you can reuse the same JWT token them for the same flush session to boost performance using
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
-]
+];
+```
+
+To enable Web Notifications browsers need to verify your identity. A standard called VAPID can authenticate you for all browsers. You'll need to create and provide a public and private key for your server. These keys must be safely stored and should not change.
+
+In order to generate the uncompressed public and secret key, encoded in Base64, enter the following in your Linux bash:
+
+```
+$ openssl ecparam -genkey -name prime256v1 -out private_key.pem
+$ openssl ec -in private_key.pem -pubout -outform DER|tail -c 65|base64|tr -d '=' |tr '/+' '_-' >> public_key.txt
+$ openssl ec -in private_key.pem -outform DER|tail -c +8|head -c 32|base64|tr -d '=' |tr '/+' '_-' >> private_key.txt
 ```
 
 ### Create A Notification

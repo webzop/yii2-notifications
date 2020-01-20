@@ -13,9 +13,15 @@
 
 namespace webzop\notifications\channels;
 
-use Yii;
+use ErrorException;
+use Minishlink\WebPush\MessageSentReport;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use webzop\notifications\model\WebNotificationRecipient;
 use webzop\notifications\Channel;
 use webzop\notifications\Notification;
+use Minishlink\WebPush\WebPush;
+use Minishlink\WebPush\Subscription;
 
 
 /**
@@ -27,6 +33,26 @@ class WebChannel extends Channel
 {
 
     /**
+     * enable/disable web channel notification
+     * @var bool
+     */
+    protected $enable = false;
+
+    /**
+     * enable/disable web channel notification
+     * @var bool
+     */
+    protected $reuseVAPIDHeaders = true;
+
+    /**
+     * contains authentication data
+     * @var array
+     */
+    protected $auth = array();
+
+
+
+    /**
      * @var string
      */
     protected $title = array();
@@ -34,7 +60,14 @@ class WebChannel extends Channel
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [
+        'TTL' => 300,               // defaults to 4 weeks (Time To Live in Seconds)
+        'urgency' => 'normal',      // protocol defaults to "normal" (can be "very-low", "low", "normal", or "high")
+        'topic' => 'new_event',     // not defined by default, this string will make the vendor show to the user only the last notification of this topic
+        'batchSize' => 200,         // defaults to 1000
+    ];
+
+
 
     /**
      * WebChannel constructor.
@@ -52,28 +85,29 @@ class WebChannel extends Channel
      */
     public function defaultOptions() {
 
-        $this->options = array(
-            'body' => '',
-            'data' => null,
-            'icon' => 'images/ccard.png',
-            'direction' => '',
-            'image' => '',
-            'badge' => '',
-            "tag" => "request",
-            'vibrate' => [200, 100, 200, 100, 200, 100, 400],
-            "actions" => array(
-                array(
-                    "action" => "yes",
-                    "title" => "Yes",
-                    "icon" => "images/yes.png",
-                ),
-                array(
-                    "action" => "no",
-                    "title" => "No",
-                    "icon" => "images/no.png",
-                ),
-            )
-        );
+//        $this->options = array(
+//            'body' => '',
+//            'data' => null,
+//            'icon' => 'images/ccard.png',
+//            'direction' => '',
+//            'image' => '',
+//            'badge' => '',
+//            "tag" => "request",
+//            'vibrate' => [200, 100, 200, 100, 200, 100, 400],
+//            "actions" => array(
+//                array(
+//                    "action" => "yes",
+//                    "title" => "Yes",
+//                    "icon" => "images/yes.png",
+//                ),
+//                array(
+//                    "action" => "no",
+//                    "title" => "No",
+//                    "icon" => "images/no.png",
+//                ),
+//            )
+//        );
+
     }
 
 
@@ -81,15 +115,72 @@ class WebChannel extends Channel
      * Send the web push notification
      *
      * @param Notification $notification
+     * @param WebNotificationRecipient|null $recipient
+     * @throws ErrorException
      */
-    public function send(Notification $notification) {
+    public function send(Notification $notification, WebNotificationRecipient $recipient = null) {
 
+        if(!$this->enable) {
+            return;
+        }
+
+/*
         $this->title = $notification->getTitle();
-
         $this->options['body'] = $notification->getDescription();
-
         $notification->getData();
-        $notification->getRoute();
+*/
+
+
+        $subcriptions = $recipient->getSubscriptions();
+
+        if(!$subcriptions) {
+            return;
+        }
+
+        $webPush = new WebPush($this->auth);
+        $webPush->setReuseVAPIDHeaders($this->reuseVAPIDHeaders);
+        $webPush->setDefaultOptions($this->options);
+
+        $payload = $notification->getTitle();
+
+        // send all the notifications with payload
+        foreach ($subcriptions as $subscription) {
+
+            $webPush->sendNotification(
+                $subscription,
+                $payload
+            );
+
+        }
+
+        /**
+         * Check sent results
+         * @var MessageSentReport $report
+         */
+        foreach ($webPush->flush() as $report) {
+            $endpoint = $report->getRequest()->getUri()->__toString();
+
+            if ($report->isSuccess()) {
+                echo "[v] Message sent successfully for subscription {$endpoint}.";
+            } else {
+                echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
+
+                // also available (to get more info)
+
+                /** @var RequestInterface $requestToPushService */
+                $requestToPushService = $report->getRequest();
+
+                /** @var ResponseInterface $responseOfPushService */
+                $responseOfPushService = $report->getResponse();
+
+                /** @var string $failReason */
+                $failReason = $report->getReason();
+
+                /** @var bool $isTheEndpointWrongOrExpired */
+                $isTheEndpointWrongOrExpired = $report->isSubscriptionExpired();
+
+            }
+        }
 
 
     }
