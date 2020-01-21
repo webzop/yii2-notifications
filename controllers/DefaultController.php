@@ -78,7 +78,11 @@ class DefaultController extends Controller
 
     public function actionReadAll()
     {
-        Yii::$app->getDb()->createCommand()->update('{{%notifications}}', ['read' => true])->execute();
+        Yii::$app->getDb()->createCommand()->update(
+            '{{%notifications}}',
+            ['read' => true, 'seen' => true],
+            ['user_id' => Yii::$app->user->id]
+            )->execute();
         if(Yii::$app->getRequest()->getIsAjax()){
             return $this->ajaxResponse(1);
         }
