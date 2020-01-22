@@ -10,6 +10,20 @@ class Module extends \yii\base\Module
 
     public $channels = [];
 
+    public $controllerNamespace = 'app\modules\niciz\controllers';
+
+    /**
+     *
+     */
+    public function init()
+    {
+        parent::init();
+        $this->setAliases([
+            '@niciz-assets' => __DIR__ . '/assets'
+        ]);
+    }
+
+
     /**
      * Send a notification to all channels
      *

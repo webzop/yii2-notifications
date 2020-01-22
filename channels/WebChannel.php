@@ -14,6 +14,7 @@
 namespace webzop\notifications\channels;
 
 use ErrorException;
+use http\Exception\InvalidArgumentException;
 use Minishlink\WebPush\MessageSentReport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -116,12 +117,13 @@ class WebChannel extends Channel
      *
      * @param Notification $notification
      * @param WebNotificationRecipient|null $recipient
+     * @return bool true if at least one notification reach the recipient
      * @throws ErrorException
      */
     public function send(Notification $notification, WebNotificationRecipient $recipient = null) {
 
         if(!$this->enable) {
-            return;
+            return false;
         }
 
 /*
@@ -130,11 +132,16 @@ class WebChannel extends Channel
         $notification->getData();
 */
 
+        if(!$recipient) {
+            return false;
+            // throw new InvalidArgumentException('Missing web notification recipient.');
+        }
 
         $subcriptions = $recipient->getSubscriptions();
 
         if(!$subcriptions) {
-            return;
+            return false;
+            //throw new InvalidArgumentException('The specified recipient has no subscription.');
         }
 
         $webPush = new WebPush($this->auth);
@@ -153,6 +160,9 @@ class WebChannel extends Channel
 
         }
 
+        // result will be true if at least one notification reach the recipient
+        $result = false;
+
         /**
          * Check sent results
          * @var MessageSentReport $report
@@ -162,26 +172,28 @@ class WebChannel extends Channel
 
             if ($report->isSuccess()) {
                 echo "[v] Message sent successfully for subscription {$endpoint}.";
+                $result = true;
             } else {
                 echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
 
                 // also available (to get more info)
 
                 /** @var RequestInterface $requestToPushService */
-                $requestToPushService = $report->getRequest();
+                //$requestToPushService = $report->getRequest();
 
                 /** @var ResponseInterface $responseOfPushService */
-                $responseOfPushService = $report->getResponse();
+                //$responseOfPushService = $report->getResponse();
 
                 /** @var string $failReason */
-                $failReason = $report->getReason();
+                //$failReason = $report->getReason();
 
                 /** @var bool $isTheEndpointWrongOrExpired */
-                $isTheEndpointWrongOrExpired = $report->isSubscriptionExpired();
+                //$isTheEndpointWrongOrExpired = $report->isSubscriptionExpired();
 
             }
         }
 
+        return $result;
 
     }
 
