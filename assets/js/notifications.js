@@ -114,6 +114,7 @@ var Notifications = (function(opts) {
             success: function (data) {
                 markRead(elem.find('.dropdown-item:not(.read)').find('.mark-read'));
                 link.off('click').on('click', function(){ return false; });
+                updateCount();
             }
         });
     });
