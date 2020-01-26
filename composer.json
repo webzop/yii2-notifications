@@ -18,7 +18,7 @@
             "role": "Developer"
         }
     ],
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "require": {
         "php": ">=7.1",
         "yiisoft/yii2": "~2.0.13",
