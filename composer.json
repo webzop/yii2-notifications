@@ -22,8 +22,7 @@
     "require": {
         "php": ">=7.1",
         "yiisoft/yii2": "~2.0.13",
-        "minishlink/web-push": "^5.2",
-        "webzop/yii2-notifications": "*"
+        "minishlink/web-push": "^5.2"
     },
     "autoload": {
         "psr-4": {
