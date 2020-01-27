@@ -38,26 +38,20 @@ class WebChannel extends Channel
      * enable/disable web channel notification
      * @var bool
      */
-    protected $enable = false;
+    public $enable = false;
 
     /**
      * enable/disable web channel notification
      * @var bool
      */
-    protected $reuseVAPIDHeaders = true;
+    public $reuseVAPIDHeaders = true;
 
     /**
      * contains authentication data
      * @var array
      */
-    protected $auth = array();
+    public $auth = array();
 
-
-
-    /**
-     * @var string
-     */
-    protected $title = array();
 
     /**
      * @var array
