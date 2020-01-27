@@ -1,10 +1,9 @@
 <?php
 
-namespace app\models;
+namespace webzop\notifications\model;
 
 use ErrorException;
 use Minishlink\WebPush\Subscription;
-use webzop\notifications\model\WebNotificationRecipient;
 use yii\db\ActiveRecord;
 
 class WebPushSubscription extends ActiveRecord implements WebNotificationRecipient
