@@ -9,6 +9,9 @@ var WebNotifications = (function(opts) {
 
     let VAPID_PUB_KEY = opts.vapid_pub_key;
 
+    let subscribe_button_label = opts.subscribe_button_label | 'Subscribe';
+    let unsubscribe_button_label = opts.unsubscribe_button_label | 'Unsubscribe';
+
     let subscribeButton;
     //let permissionButton;
 
@@ -163,9 +166,9 @@ var WebNotifications = (function(opts) {
      */
     function updateButtonSubscribeStatus() {
         if (isSubscribed) {
-            subscribeButton.textContent = 'Unsubscribe';
+            subscribeButton.textContent = unsubscribe_button_label;
         } else {
-            subscribeButton.textContent = 'Subscribe';
+            subscribeButton.textContent = subscribe_button_label;
         }
     }
 

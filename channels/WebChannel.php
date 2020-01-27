@@ -124,6 +124,8 @@ class WebChannel extends Channel
         $webPush = new WebPush($this->auth);
         $webPush->setReuseVAPIDHeaders($this->reuseVAPIDHeaders);
         $webPush->setDefaultOptions($this->options);
+        $webPush->setAutomaticPadding(false);
+
 
         $payload = $notification->getTitle();
 
