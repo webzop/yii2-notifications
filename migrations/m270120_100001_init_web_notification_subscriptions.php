@@ -28,8 +28,7 @@ class m270120_100001_init_web_notification_subscriptions extends Migration
             'updated_at' => $this->timestamp()->defaultValue(null)->append('ON UPDATE CURRENT_TIMESTAMP'),
         ], $tableOptions);
         $this->createIndex('index_2', '{{%web_push_subscription}}', ['user_id']);
-        $this->createIndex('index_3', '{{%web_push_subscription}}', ['created_at']);
-        $this->createIndex('index_4', '{{%web_push_subscription}}', ['seen']);
+        $this->createIndex('index_4', '{{%web_push_subscription}}', ['endpoint']);
 
     }
 
