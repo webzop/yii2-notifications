@@ -23,6 +23,7 @@ use webzop\notifications\Channel;
 use webzop\notifications\Notification;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
+use yii\base\InvalidConfigException;
 
 
 /**
@@ -116,11 +117,11 @@ class WebChannel extends Channel
      * Send the web push notification
      *
      * @param Notification $notification
-     * @param WebNotificationRecipient|null $recipient
      * @return bool true if at least one notification reach the recipient
      * @throws ErrorException
+     * @throws InvalidConfigException
      */
-    public function send(Notification $notification, WebNotificationRecipient $recipient = null) {
+    public function send(Notification $notification) {
 
         if(!$this->enable) {
             return false;
@@ -132,12 +133,19 @@ class WebChannel extends Channel
         $notification->getData();
 */
 
-        if(!$recipient) {
-            return false;
-            // throw new InvalidArgumentException('Missing web notification recipient.');
+
+
+
+        /**
+         * @var $user WebNotificationRecipient
+         */
+        $user = $notification->user;
+
+        if(!($user instanceof WebNotificationRecipient)) {
+            throw new InvalidConfigException("The recipient class must implement the interface class 'WebNotificationRecipient'");
         }
 
-        $subcriptions = $recipient->getSubscriptions();
+        $subcriptions = $user->getSubscriptions();
 
         if(!$subcriptions) {
             return false;
