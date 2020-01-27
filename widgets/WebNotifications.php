@@ -109,7 +109,7 @@ class WebNotifications extends \yii\base\Widget
      * @return array
      */
     protected function getParams() {
-        array(
+        return array(
             'service_worker_filepath' => $this->serviceWorkerFilepath,
             'vapid_pub_key' => $this->vapid_pub_key,
             'subscribe_button_label' => $this->subscribeButtonLabel,
@@ -117,7 +117,6 @@ class WebNotifications extends \yii\base\Widget
             'subscribe_url' => $this->subscribeUrl,
             'unsubscribe_url' => $this->unsubscribeUrl,
         );
-
     }
 
 
