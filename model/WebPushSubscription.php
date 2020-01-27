@@ -15,24 +15,28 @@ class WebPushSubscription extends ActiveRecord implements WebNotificationRecipie
      */
     public static function getUserSubscriptions($user_id = null) {
 
-        $subscriptions = self::find();
+        $query = self::find();
 
         if($user_id) {
-            $subscriptions->where(['user_id' => $user_id]);
+            $query->where(['user_id' => $user_id]);
         }
 
-        $subscriptions
+        $subscriptions = $query
             ->orderBy('id')
             ->all();
 
 
         $result = array();
         foreach($subscriptions as $subscription) {
-            $result[] = Subscription::create($subscription);
+
+            if($subscription->subscription) {
+                $data = json_decode($subscription->subscription, true);
+                $result[] = Subscription::create($data);
+            }
+
         }
 
         return $result;
     }
-
 
 }

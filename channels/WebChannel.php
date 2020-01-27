@@ -20,6 +20,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use webzop\notifications\model\WebNotificationRecipient;
 use webzop\notifications\Channel;
+use webzop\notifications\model\WebPushSubscription;
 use webzop\notifications\Notification;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
@@ -81,28 +82,28 @@ class WebChannel extends Channel
      */
     public function defaultOptions() {
 
-//        $this->options = array(
-//            'body' => '',
-//            'data' => null,
-//            'icon' => 'images/ccard.png',
-//            'direction' => '',
-//            'image' => '',
-//            'badge' => '',
-//            "tag" => "request",
-//            'vibrate' => [200, 100, 200, 100, 200, 100, 400],
-//            "actions" => array(
-//                array(
-//                    "action" => "yes",
-//                    "title" => "Yes",
-//                    "icon" => "images/yes.png",
-//                ),
-//                array(
-//                    "action" => "no",
-//                    "title" => "No",
-//                    "icon" => "images/no.png",
-//                ),
-//            )
-//        );
+        //        $this->options = array(
+        //            'body' => '',
+        //            'data' => null,
+        //            'icon' => 'images/ccard.png',
+        //            'direction' => '',
+        //            'image' => '',
+        //            'badge' => '',
+        //            "tag" => "request",
+        //            'vibrate' => [200, 100, 200, 100, 200, 100, 400],
+        //            "actions" => array(
+        //                array(
+        //                    "action" => "yes",
+        //                    "title" => "Yes",
+        //                    "icon" => "images/yes.png",
+        //                ),
+        //                array(
+        //                    "action" => "no",
+        //                    "title" => "No",
+        //                    "icon" => "images/no.png",
+        //                ),
+        //            )
+        //        );
 
     }
 
@@ -121,29 +122,17 @@ class WebChannel extends Channel
             return false;
         }
 
-/*
-        $this->title = $notification->getTitle();
-        $this->options['body'] = $notification->getDescription();
-        $notification->getData();
-*/
+        /*
+                $this->title = $notification->getTitle();
+                $this->options['body'] = $notification->getDescription();
+                $notification->getData();
+        */
 
+        $user_id = $notification->getUserId();
+        $subscriptions = WebPushSubscription::getUserSubscriptions($user_id);
 
-
-
-        /**
-         * @var $user WebNotificationRecipient
-         */
-        $user = $notification->user;
-
-        if(!($user instanceof WebNotificationRecipient)) {
-            throw new InvalidConfigException("The recipient class must implement the interface class 'WebNotificationRecipient'");
-        }
-
-        $subcriptions = $user->getUserSubscriptions();
-
-        if(!$subcriptions) {
+        if(!$subscriptions) {
             return false;
-            //throw new InvalidArgumentException('The specified recipient has no subscription.');
         }
 
         $webPush = new WebPush($this->auth);
@@ -153,7 +142,7 @@ class WebChannel extends Channel
         $payload = $notification->getTitle();
 
         // send all the notifications with payload
-        foreach ($subcriptions as $subscription) {
+        foreach ($subscriptions as $subscription) {
 
             $webPush->sendNotification(
                 $subscription,
