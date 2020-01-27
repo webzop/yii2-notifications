@@ -22,7 +22,7 @@ class m270120_100001_init_web_notification_subscriptions extends Migration
         $this->createTable('{{%web_push_subscription}}', [
             'id' => $this->primaryKey(),
             'subscription' => $this->text()->notNull(),
-            'endpoint' => $this->text()->notNull(),
+            'endpoint' => $this->string(500)->notNull(),
             'user_id' => $this->integer(11)->unsigned()->notNull()->defaultValue(0),
             'created_at' => $this->timestamp()->null()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->timestamp()->defaultValue(null)->append('ON UPDATE CURRENT_TIMESTAMP'),
