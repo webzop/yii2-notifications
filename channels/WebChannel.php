@@ -139,7 +139,7 @@ class WebChannel extends Channel
             throw new InvalidConfigException("The recipient class must implement the interface class 'WebNotificationRecipient'");
         }
 
-        $subcriptions = $user->getSubscriptions();
+        $subcriptions = $user->getUserSubscriptions();
 
         if(!$subcriptions) {
             return false;
