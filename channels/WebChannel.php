@@ -1,29 +1,15 @@
 <?php
 
-/**
- * Notification object is composed by a title and an array options
- *
- * The three key steps to implementing push notifications are:
- *
- * - Adding the client side logic to subscribe a user to push (i.e. the JavaScript and UI in your web app that registers a user to push messages).
- * - The API call from your back-end / application that triggers a push message to a user's device.
- * - The service worker JavaScript file that will receive a "push event" when the push arrives on the device. It's in this JavaScript that you'll be able to show a notification.
- *
- */
-
 namespace webzop\notifications\channels;
 
 use ErrorException;
-use http\Exception\InvalidArgumentException;
 use Minishlink\WebPush\MessageSentReport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use webzop\notifications\model\WebNotificationRecipient;
 use webzop\notifications\Channel;
 use webzop\notifications\model\WebPushSubscription;
 use webzop\notifications\Notification;
 use Minishlink\WebPush\WebPush;
-use Minishlink\WebPush\Subscription;
 use yii\base\InvalidConfigException;
 
 
