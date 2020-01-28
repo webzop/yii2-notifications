@@ -124,7 +124,7 @@ class WebChannel extends Channel
         $webPush = new WebPush($this->auth);
         $webPush->setReuseVAPIDHeaders($this->reuseVAPIDHeaders);
         $webPush->setDefaultOptions($this->options);
-        $webPush->setAutomaticPadding(false);
+        $webPush->setAutomaticPadding(false);       // fix for firefox (doesn't work with default)
 
 
         $payload = $notification->getTitle();

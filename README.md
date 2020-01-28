@@ -283,6 +283,21 @@ So you can call the Notifications widget in your app layout to show generated no
 </div>
 ```
 
+You can pass to the widget the following params:
+
+```html
+<div>
+    <?= \webzop\notifications\widgets\WebNotifications::widget([
+                'subscribeUrl' => 'url-to-subscribe-controller-action',
+                'unsubscribeUrl' => 'url-to-unsubscribe-controller-action',
+                'vapid_pub_key' => 'your-vapid-pub-key',
+                'unsubscribeButtonLabel' => 'unsubscribe button label',
+                'subscribeButtonLabel' => 'subscribe button label',
+                'serviceWorkerFilepath' => 'the-service-worker-filepath'
+    ]) ?>
+</div>
+```
+
 Remember to place the service-worker.js file in the web root and fix the nginx configuration like: 
 
 ```nginx
