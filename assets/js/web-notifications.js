@@ -2,15 +2,15 @@
 
 var WebNotifications = (function(opts) {
 
-    let service_worker_filepath = opts.service_worker_filepath;
+    let service_worker_filepath = opts.service_worker_filepath || '/service-worker.js';
 
     let SUBSCRIBE_URL = opts.subscribe_url;
     let UNSUBSCRIBE_URL = opts.unsubscribe_url;
 
     let VAPID_PUB_KEY = opts.vapid_pub_key;
 
-    let subscribe_button_label = opts.subscribe_button_label | 'Subscribe';
-    let unsubscribe_button_label = opts.unsubscribe_button_label | 'Unsubscribe';
+    let subscribe_button_label = opts.subscribe_button_label || 'Subscribe';
+    let unsubscribe_button_label = opts.unsubscribe_button_label || 'Unsubscribe';
 
     let subscribeButton;
     //let permissionButton;
