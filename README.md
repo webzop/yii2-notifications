@@ -59,16 +59,16 @@ Notifications is often used as an application module and configured in the appli
                 ],
                 'web' => [
                     'class' => 'webzop\notifications\channels\WebChannel',
-                    'enable' => true,                                   // OPTIONAL (default: false) enable/disable web channel
-                    'service_worker_filepath' => '/service-worker.js',   // OPTIONAL (default: /service-worker.js) allow to define the service worker path from the server root
+                    'enable' => true,                                       // OPTIONAL (default: false) enable/disable web channel
+                    'service_worker_filepath' => '/service-worker.js',      // OPTIONAL (default: /service-worker.js) allow to define the service worker path from the server root
                     'auth' => [
                         'VAPID' => [
-                            'subject' => 'mailto:me@website.com',       // can be a mailto: or your website address
-                            'publicKey' => '~88 chars',                 // (recommended) uncompressed public key P-256 encoded in Base64-URL
-                            'privateKey' => '~44 chars',                // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
-                            'pemFile' => 'path/to/pem',                 // if you have a PEM file and can link to it on your filesystem
-                            'pem' => 'pemFileContent',                  // if you have a PEM file and want to hardcode its content
-                            'reuseVAPIDHeaders' => true                 // OPTIONAL (default: true) you can reuse the same JWT token them for the same flush session to boost performance using
+                            'subject' => 'mailto:me@website.com',           // can be a mailto: or your website address
+                            'publicKey' => '~88 chars',                     // (recommended) uncompressed public key P-256 encoded in Base64-URL
+                            'privateKey' => '~44 chars',                    // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
+                            'pemFile' => 'path/to/pem',                     // if you have a PEM file and can link to it on your filesystem
+                            'pem' => 'pemFileContent',                      // if you have a PEM file and want to hardcode its content
+                            'reuseVAPIDHeaders' => true                     // OPTIONAL (default: true) you can reuse the same JWT token them for the same flush session to boost performance using
                         ],
                     ],
                 ],
@@ -78,7 +78,7 @@ Notifications is often used as an application module and configured in the appli
 ];
 ```
 
-To enable Web Notifications browsers need to verify your identity. A standard called VAPID can authenticate you for all browsers. You'll need to create and provide a public and private key for your server. These keys must be safely stored and should not change.
+To enable Web Push Notifications browsers is needed to verify your identity. A standard called VAPID can authenticate the application for all browsers. You'll need to create and provide a public and private key for your server. These keys must be safely stored and should not change.
 
 In order to generate the uncompressed public and secret key, encoded in Base64, enter the following in your Linux bash:
 
@@ -86,6 +86,12 @@ In order to generate the uncompressed public and secret key, encoded in Base64, 
 $ openssl ecparam -genkey -name prime256v1 -out private_key.pem
 $ openssl ec -in private_key.pem -pubout -outform DER|tail -c 65|base64|tr -d '=' |tr '/+' '_-' >> public_key.txt
 $ openssl ec -in private_key.pem -outform DER|tail -c +8|head -c 32|base64|tr -d '=' |tr '/+' '_-' >> private_key.txt
+```
+
+Or you can use this method provided in the module:
+
+```php
+\Minishlink\WebPush\VAPID::createVapidKeys();
 ```
 
 ### Create A Notification
@@ -258,4 +264,31 @@ So you can call the Notifications widget in your app layout to show generated no
     <?php echo \webzop\notifications\widgets\Notifications::widget() ?>
 
 </div>
+```
+
+
+### Web Push Notification Channel
+
+This channel is used to send web push notification to subscriber. Each notification subscription will be stored in the database, so before using this channel, you have to run its migrations scripts:
+
+```bash
+./yii migrate/up --migrationPath=vendor/webzop/yii2-notifications/migrations/
+```
+
+So you can call the Notifications widget in your app layout to show generated notifications:
+
+```html
+<div>
+    <?php echo \webzop\notifications\widgets\WebNotifications::widget() ?>
+</div>
+```
+
+Remember to place the service-worker.js file in the web root and fix the nginx configuration like: 
+
+```nginx
+location /service-worker {
+    root /usr/share/nginx/html/project/;
+    #default_type "application/javascript; charset=utf-8";
+    try_files /service-worker.js =404;
+}
 ```

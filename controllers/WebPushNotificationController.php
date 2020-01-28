@@ -2,7 +2,9 @@
 
 namespace webzop\notifications\controllers;
 
+use http\Exception\InvalidArgumentException;
 use webzop\notifications\model\WebPushSubscription;
+use Yii;
 use yii\web\Controller;
 
 class WebPushNotificationController extends Controller
@@ -25,12 +27,17 @@ class WebPushNotificationController extends Controller
      */
     public function actionSubscribe()
     {
+        $userId = null;
+        if(Yii::$app->getUser()) {
+            $userId = Yii::$app->getUser()->getId();
+        }
 
-        // TODO: fix user id
-        // $userId = Yii::$app->getUser()->getId();
-
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $subscription = $request->getRawBody();
+
+        if(empty($subscription)) {
+            throw new InvalidArgumentException('Missing subscription data');
+        }
 
         $decoded = json_decode($subscription);
         $endpoint = $decoded->endpoint;
@@ -54,7 +61,7 @@ class WebPushNotificationController extends Controller
             $message = 'user subscribed';
         }
 
-        $response = \Yii::$app->response;
+        $response = Yii::$app->response;
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = [
             'success' => true,
@@ -69,10 +76,12 @@ class WebPushNotificationController extends Controller
      */
     public function actionUnsubscribe()
     {
-        // TODO: fai qualche controllo in più sulle variabili
-
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $subscription = $request->getRawBody();
+
+        if(empty($subscription)) {
+            throw new InvalidArgumentException('Missing subscription data');
+        }
 
         $decoded = json_decode($subscription);
         $endpoint = $decoded->endpoint;
@@ -83,7 +92,7 @@ class WebPushNotificationController extends Controller
             $subscriber->delete();
         }
 
-        $response = \Yii::$app->response;
+        $response = Yii::$app->response;
         $response->format = \yii\web\Response::FORMAT_JSON;
         $response->data = [
             'success' => true,
