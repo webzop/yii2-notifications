@@ -41,15 +41,17 @@ class WebChannel extends Channel
 
 
     /**
+     * default options for WebPush API
      * @var array
      */
-    protected $options = [
-        'TTL' => 300,               // defaults to 4 weeks (Time To Live in Seconds)
-        'urgency' => 'normal',      // protocol defaults to "normal" (can be "very-low", "low", "normal", or "high")
-        'topic' => 'new_event',     // not defined by default, this string will make the vendor show to the user only the last notification of this topic
-        'batchSize' => 200,         // defaults to 1000
-    ];
+    protected $options = [];
 
+
+    /**
+     * default data to push
+     * @var array
+     */
+    protected $data = [];
 
 
     /**
@@ -60,36 +62,49 @@ class WebChannel extends Channel
      */
     public function __construct($id, $config = []) {
         parent::__construct($id, $config);
-        $this->defaultOptions();
+        $this->setDefaultOptions();
+        $this->setDefaultData();
     }
 
     /**
      * setup default options
      */
-    public function defaultOptions() {
+    public function setDefaultOptions() {
 
-        //        $this->options = array(
-        //            'body' => '',
-        //            'data' => null,
-        //            'icon' => 'images/ccard.png',
-        //            'direction' => '',
-        //            'image' => '',
-        //            'badge' => '',
-        //            "tag" => "request",
-        //            'vibrate' => [200, 100, 200, 100, 200, 100, 400],
-        //            "actions" => array(
-        //                array(
-        //                    "action" => "yes",
-        //                    "title" => "Yes",
-        //                    "icon" => "images/yes.png",
-        //                ),
-        //                array(
-        //                    "action" => "no",
-        //                    "title" => "No",
-        //                    "icon" => "images/no.png",
-        //                ),
-        //            )
-        //        );
+        $this->options = [
+            'TTL' => 300,               // defaults to 4 weeks (Time To Live in Seconds)
+            'urgency' => 'normal',      // protocol defaults to "normal" (can be "very-low", "low", "normal", or "high")
+            'batchSize' => 200,         // defaults to 1000
+        ];
+
+    }
+
+    public function setDefaultData() {
+
+        $this->data = [
+            'timestamp' => time(),
+            'requireInteraction' => true
+
+//            'vibrate' => [200, 100, 200, 100, 400],
+
+//            "actions" => array(
+//                array(
+//                    "action" => "yes",
+//                    "title" => "Yes",
+//                    "icon" => "images/yes.png",
+//                ),
+//                array(
+//                    "action" => "no",
+//                    "title" => "No",
+//                    "icon" => "images/no.png",
+//                ),
+//            ),
+
+//            'icon' => 'images/ccard.png',
+//            'image' => '',
+//            'badge' => '',
+
+        ];
 
     }
 
@@ -108,12 +123,6 @@ class WebChannel extends Channel
             return false;
         }
 
-        /*
-                $this->title = $notification->getTitle();
-                $this->options['body'] = $notification->getDescription();
-                $notification->getData();
-        */
-
         $user_id = $notification->getUserId();
         $subscriptions = WebPushSubscription::getUserSubscriptions($user_id);
 
@@ -129,14 +138,26 @@ class WebChannel extends Channel
 
         $payload = $notification->getTitle();
 
+        $payload = array_merge($this->data, array(
+            'title' => $notification->getTitle(),
+            'body' => $notification->getDescription(),
+            'data' => $notification->getData(),
+        ));
+
+        if($tag = $notification->getTag()) {
+            $payload['tag'] = $tag;
+        }
+
+
         // send all the notifications with payload
         foreach ($subscriptions as $subscription) {
 
             $webPush->sendNotification(
                 $subscription,
-                $payload
+                json_encode(
+                    $payload
+                )
             );
-
         }
 
         // result will be true if at least one notification reach the recipient
@@ -150,10 +171,10 @@ class WebChannel extends Channel
             $endpoint = $report->getRequest()->getUri()->__toString();
 
             if ($report->isSuccess()) {
-                echo "[v] Message sent successfully for subscription {$endpoint}.";
+                //echo "[v] Message sent successfully for subscription {$endpoint}.";
                 $result = true;
             } else {
-                echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
+                //echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
 
                 // also available (to get more info)
 
@@ -173,6 +194,8 @@ class WebChannel extends Channel
         }
 
         return $result;
+
+        return true;
 
     }
 

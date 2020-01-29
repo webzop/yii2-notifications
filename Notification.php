@@ -19,6 +19,8 @@ abstract class Notification extends \yii\base\BaseObject
 
     public $data = [];
 
+    public $tag = null;
+
     /**
      * Create an instance
      *
@@ -84,6 +86,26 @@ abstract class Notification extends \yii\base\BaseObject
      */
     public function setData($data = []){
         $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Gets notification tag
+     *
+     * @return array
+     */
+    public function getTag(){
+        return $this->tag;
+    }
+
+    /**
+     * Sets notification tag
+     *
+     * @param string|null $tag
+     * @return self
+     */
+    public function setTag($tag = null){
+        $this->tag = $tag;
         return $this;
     }
 
