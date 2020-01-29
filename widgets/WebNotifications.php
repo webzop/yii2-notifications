@@ -7,6 +7,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Json;
+use yii\web\View;
 
 
 class WebNotifications extends \yii\base\Widget
@@ -97,12 +98,11 @@ class WebNotifications extends \yii\base\Widget
      */
     public function registerAssets()
     {
-        $js = 'WebNotifications(' . Json::encode($this->getParams()) . ');';
         $view = $this->getView();
-
         WebNotificationsAsset::register($view);
 
-        $view->registerJs($js);
+        $js = 'WebNotifications(' . Json::encode($this->getParams()) . ');';
+        $view->registerJs($js, View::POS_END);
     }
 
     /**

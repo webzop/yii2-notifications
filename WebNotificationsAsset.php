@@ -3,6 +3,7 @@
 namespace webzop\notifications;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Class NotificationsAsset
@@ -11,6 +12,8 @@ use yii\web\AssetBundle;
  */
 class WebNotificationsAsset extends AssetBundle
 {
+    public $jsOptions = ['position' => View::POS_END];
+
     /**
      * @inheritdoc
      */
