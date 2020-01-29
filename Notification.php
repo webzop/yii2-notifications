@@ -19,7 +19,29 @@ abstract class Notification extends \yii\base\BaseObject
 
     public $data = [];
 
+    /**
+     * @var string|null
+     */
     public $tag = null;
+
+    /**
+     * @var string|null
+     */
+    public $priority = null;
+
+    /**
+     * @var string|null
+     */
+    public $ttl = null;
+
+
+    const PRIORITY_LOWEST = 'very-low';
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_NORMAL = 'normal';
+    const PRIORITY_HIGH = 'high';
+
+
+    const DEFAULT_TTL = 7200;               // [in seconds]. 7200 = valid for two hours
 
     /**
      * Create an instance
@@ -37,7 +59,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Determines if the notification can be sent.
      *
-     * @param  \webzop\notifications\Channel $channel
+     * @param Channel $channel
      * @return bool
      */
     public function shouldSend($channel)
@@ -82,6 +104,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sets notification data
      *
+     * @param array $data
      * @return self
      */
     public function setData($data = []){
@@ -92,7 +115,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Gets notification tag
      *
-     * @return array
+     * @return string|null
      */
     public function getTag(){
         return $this->tag;
@@ -110,9 +133,56 @@ abstract class Notification extends \yii\base\BaseObject
     }
 
     /**
+     * Sets notification priority
+     *
+     * @param string $priority
+     * @return self
+     */
+    public function setPriority($priority){
+        $this->priority = $priority;
+        return $this;
+    }
+
+    /**
+     * Gets notification priority
+     *
+     * @return string
+     */
+    public function getPriority(){
+        if($this->priority) {
+            return $this->priority;
+        }
+        return Notification::PRIORITY_NORMAL;
+    }
+
+    /**
+     * Sets notification TTL
+     *
+     * @param string $ttl
+     * @return self
+     */
+    public function setTTL($ttl){
+        $this->ttl = $ttl;
+        return $this;
+    }
+
+    /**
+     * Gets notification TTL
+     *
+     * @return string
+     */
+    public function getTTL(){
+        if($this->ttl) {
+            return $this->ttl;
+        }
+        return Notification::DEFAULT_TTL;
+    }
+
+
+    /**
      * Gets the UserId
      *
-     * @return array
+     * @return int
      */
     public function getUserId(){
         return $this->userId;
@@ -121,6 +191,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sets the UserId
      *
+     * @param int $id
      * @return self
      */
     public function setUserId($id){
@@ -131,10 +202,6 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sends this notification to all channels
      *
-     * @param string $key The key of the notification
-     * @param integer $userId The user id that will get the notification
-     * @param array $data Additional data information
-     * @throws \Exception
      */
     public function send(){
         Yii::$app->getModule('notifications')->send($this);

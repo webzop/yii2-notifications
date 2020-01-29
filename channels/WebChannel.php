@@ -10,7 +10,6 @@ use webzop\notifications\Channel;
 use webzop\notifications\model\WebPushSubscription;
 use webzop\notifications\Notification;
 use Minishlink\WebPush\WebPush;
-use yii\base\InvalidConfigException;
 
 
 /**
@@ -72,9 +71,9 @@ class WebChannel extends Channel
     public function setDefaultOptions() {
 
         $this->options = [
-            'TTL' => 300,               // defaults to 4 weeks (Time To Live in Seconds)
-            'urgency' => 'normal',      // protocol defaults to "normal" (can be "very-low", "low", "normal", or "high")
-            'batchSize' => 200,         // defaults to 1000
+            //'TTL' => 300,                                   // defaults to 4 weeks (Time To Live in Seconds)
+            'urgency' => Notification::PRIORITY_NORMAL,     // protocol defaults to "normal" (can be "very-low", "low", "normal", or "high")
+            'batchSize' => 200,                             // defaults to 1000
         ];
 
     }
@@ -115,7 +114,6 @@ class WebChannel extends Channel
      * @param Notification $notification
      * @return bool true if at least one notification reach the recipient
      * @throws ErrorException
-     * @throws InvalidConfigException
      */
     public function send(Notification $notification) {
 
@@ -136,7 +134,10 @@ class WebChannel extends Channel
         $webPush->setAutomaticPadding(false);       // fix for firefox (doesn't work with default)
 
 
-        $payload = $notification->getTitle();
+        $options = array_merge($this->options, array(
+            'urgency' => $notification->getPriority(),
+            'TTL' => $notification->getTTL(),
+        ));
 
         $payload = array_merge($this->data, array(
             'title' => $notification->getTitle(),
@@ -194,8 +195,6 @@ class WebChannel extends Channel
         }
 
         return $result;
-
-        return true;
 
     }
 
