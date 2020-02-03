@@ -65,7 +65,8 @@ class WebNotifications extends \yii\base\Widget
         }
 
         // set VAPID publis key
-        $this->vapid_pub_key = Yii::$app->params['VAPID_public_key'];
+        $module = Yii::$app->getModule('notifications');
+        $this->vapid_pub_key = $module->channels['web']['auth']['VAPID']['publicKey'];
     }
 
     /**

@@ -12,17 +12,6 @@ class Module extends \yii\base\Module
 
     public $controllerNamespace = 'webzop\notifications\controllers';
 
-    /**
-     *
-     */
-    public function init()
-    {
-        parent::init();
-        $this->setAliases([
-            '@niciz-assets' => __DIR__ . '/assets'
-        ]);
-    }
-
 
     /**
      * Send a notification to all channels

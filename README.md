@@ -60,7 +60,6 @@ Notifications is often used as an application module and configured in the appli
                 'web' => [
                     'class' => 'webzop\notifications\channels\WebChannel',
                     'enable' => true,                                       // OPTIONAL (default: false) enable/disable web channel
-                    'service_worker_filepath' => '/service-worker.js',      // OPTIONAL (default: /service-worker.js) allow to define the service worker path from the server root
                     'auth' => [
                         'VAPID' => [
                             'subject' => 'mailto:me@website.com',           // can be a mailto: or your website address
