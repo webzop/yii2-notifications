@@ -81,7 +81,6 @@ class WebChannel extends Channel
     public function setDefaultData() {
 
         $this->data = [
-            'timestamp' => time(),
             'requireInteraction' => true
 
 //            'vibrate' => [200, 100, 200, 100, 400],

@@ -43,6 +43,7 @@ self.addEventListener('push', function(e) {
         console.log(push_data);
 
         options = push_data;
+        options.timestamp = Math.floor(Date.now());
 
         if(push_data.title) {
             title = push_data.title;
