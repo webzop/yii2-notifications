@@ -24,7 +24,7 @@ class WebChannel extends Channel
      * enable/disable web channel notification
      * @var bool
      */
-    public $enable = false;
+    public $enable = true;
 
     /**
      * enable/disable web channel notification
@@ -40,7 +40,13 @@ class WebChannel extends Channel
 
 
     /**
-     * default options for WebPush API
+     * config for WebPush API
+     * @var array
+     */
+    public $config = [];
+
+    /**
+     * default options for Notification API
      * @var array
      */
     protected $options = [];
@@ -188,7 +194,19 @@ class WebChannel extends Channel
                 //$failReason = $report->getReason();
 
                 /** @var bool $isTheEndpointWrongOrExpired */
-                //$isTheEndpointWrongOrExpired = $report->isSubscriptionExpired();
+                $isTheEndpointWrongOrExpired = $report->isSubscriptionExpired();
+
+                if($isTheEndpointWrongOrExpired) {
+
+                    // remove expired subscriptions
+                    $subscriber = WebPushSubscription::findOne(['endpoint' => $endpoint]);
+
+                    if($subscriber) {
+                        $subscriber->delete();
+                    }
+
+
+                }
 
             }
         }

@@ -6,6 +6,7 @@ use http\Exception\InvalidArgumentException;
 use webzop\notifications\model\WebPushSubscription;
 use Yii;
 use yii\web\Controller;
+use yii\web\Response;
 
 class WebPushNotificationController extends Controller
 {
@@ -71,6 +72,7 @@ class WebPushNotificationController extends Controller
         return;
     }
 
+
     /**
      * unsubscribe action
      */
@@ -98,6 +100,24 @@ class WebPushNotificationController extends Controller
             'success' => true,
             'message' => 'user unsubscribed'
         ];
+    }
+
+
+    /**
+     * @return \yii\console\Response|Response
+     */
+    public function actionServiceWorker() {
+        $app_root = Yii::getAlias("@app");
+
+        $filepath = '/service-worker.js';
+
+        $module = Yii::$app->getModule('notifications');
+
+        if(!empty($module->channels['web']['config']['serviceWorkerFilepath'])) {
+            $filepath = $module->channels['web']['config']['serviceWorkerFilepath'];
+        }
+
+        return Yii::$app->response->sendFile($app_root . $filepath);
     }
 
 }

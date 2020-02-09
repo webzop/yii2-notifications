@@ -59,7 +59,16 @@ Notifications is often used as an application module and configured in the appli
                 ],
                 'web' => [
                     'class' => 'webzop\notifications\channels\WebChannel',
-                    'enable' => true,                                       // OPTIONAL (default: false) enable/disable web channel
+                    'enable' => true,                                       // OPTIONAL (default: true) enable/disable web channel
+                    'config' => [
+                        'serviceWorkerFilepath' => '/service-worker.js',    // OPTIONAL (default: /service-worker.js) is the service worker filename
+                        'serviceWorkerScope' => '/app',                     // OPTIONAL (default: './' the service worker path) the scope of the service worker: https://developers.google.com/web/ilt/pwa/introduction-to-service-worker#registration_and_scope
+                        'serviceWorkerUrl' => 'url-to-serviceworker',       // OPTIONAL (default: Url::to(['/notifications/web-push-notification/service-worker']))
+                        'subscribeUrl' => 'url-to-subscribe-handler',       // OPTIONAL (default: Url::to(['/notifications/web-push-notification/subscribe']))
+                        'unsubscribeUrl' => 'url-to-unsubscribe-handler',   // OPTIONAL (default: Url::to(['/notifications/web-push-notification/unsubscribe']))
+                        'subscribeLabel' => 'subscribe button label',       // OPTIONAL (default: 'Subscribe')
+                        'unsubscribeLabel' => 'subscribe button label',     // OPTIONAL (default: 'Unsubscribe')
+                    ],
                     'auth' => [
                         'VAPID' => [
                             'subject' => 'mailto:me@website.com',           // can be a mailto: or your website address
@@ -282,27 +291,15 @@ So you can call the Notifications widget in your app layout to show generated no
 </div>
 ```
 
-You can pass to the widget the following params:
+You can customize the HTML template for the widget as follow. 
+When you customize the template remember to include a button with id 'js-web-push-subscribe-button':
 
 ```html
 <div>
     <?= \webzop\notifications\widgets\WebNotifications::widget([
-                'subscribeUrl' => 'url-to-subscribe-controller-action',
-                'unsubscribeUrl' => 'url-to-unsubscribe-controller-action',
-                'vapid_pub_key' => 'your-vapid-pub-key',
-                'unsubscribeButtonLabel' => 'unsubscribe button label',
-                'subscribeButtonLabel' => 'subscribe button label',
-                'serviceWorkerFilepath' => 'the-service-worker-filepath'
+        'template' => '... <button id="js-web-push-subscribe-button" disabled="disabled"></button> ...'
     ]) ?>
 </div>
 ```
 
-Remember to place the service-worker.js file in the web root and fix the nginx configuration like: 
-
-```nginx
-location /service-worker {
-    root /usr/share/nginx/html/project/;
-    #default_type "application/javascript; charset=utf-8";
-    try_files /service-worker.js =404;
-}
-```
+Remember to place the service-worker.js file in the web root in order to serve the service worker when the WebNotifications widget is initialized.

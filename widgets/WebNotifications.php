@@ -2,6 +2,7 @@
 
 namespace webzop\notifications\widgets;
 
+use Exception;
 use webzop\notifications\WebNotificationsAsset;
 use Yii;
 use yii\helpers\Html;
@@ -12,62 +13,80 @@ use yii\web\View;
 
 class WebNotifications extends \yii\base\Widget
 {
-
-    /**
-     * @var string filepath of service-worker.js
-     */
-    public $serviceWorkerFilepath = '/service-worker.js';
-
     /**
      * @var string VAPID public key
      */
-    public $vapid_pub_key = null;
+    protected $_vapidPubKey = null;
 
     /**
-     * @var string button label for subscribe button
+     * module configuration params
      */
-    public $subscribeButtonLabel = 'Subscribe';
+    protected $_config = array();
 
     /**
-     * @var string button label for unsubscribe button
+     * settable HTML template for module
+     * @var string
      */
-    public $unsubscribeButtonLabel = 'Unsubscribe';
+    public $template = '';
 
-    /**
-     * @var string subscribe url
-     */
-    public $subscribeUrl = null;
-
-    /**
-     * @var string unsubscribe url
-     */
-    public $unsubscribeUrl = null;
-
-    /**
-     * settable options for module
-     * @var array
-     */
-    public $options = [];
 
     /**
      *
+     * @throws Exception
      */
     public function init()
     {
         parent::init();
 
-        // set subscribe and unsubscribe urls
-        if(!$this->subscribeUrl) {
-            $this->subscribeUrl = Url::to(['/notifications/web-push-notification/subscribe']);
-        }
-        if(!$this->unsubscribeUrl) {
-            $this->unsubscribeUrl = Url::to(['/notifications/web-push-notification/unsubscribe']);
+        $this->setDefaultConfig();
+
+
+        // override defaults with config params
+        $module = Yii::$app->getModule('notifications');
+
+        if(!empty($module->channels['web']['config'])) {
+            $module_config = $module->channels['web']['config'];
+            $this->_config = array_merge($this->_config, $module_config);
         }
 
-        // set VAPID publis key
-        $module = Yii::$app->getModule('notifications');
-        $this->vapid_pub_key = $module->channels['web']['auth']['VAPID']['publicKey'];
+
+        // set VAPID public key
+        if(empty($module->channels['web']['auth']['VAPID']['publicKey'])) {
+            throw new Exception('Invalid Module configuration: Missing VAPID public key.');
+        }
+        $this->_vapidPubKey = $module->channels['web']['auth']['VAPID']['publicKey'];
+
     }
+
+
+    /**
+     * @return mixed
+     */
+    protected function getConfig() {
+        return array_merge(
+            $this->_config,
+            array(
+                'vapid_pub_key' => $this->_vapidPubKey
+            )
+        );
+    }
+
+
+    /**
+     * setup default configuration
+     */
+    public function setDefaultConfig() {
+        $this->_config = array(
+            'serviceWorkerFilepath' => '/service-worker.js',
+            'serviceWorkerScope' => './',
+            'serviceWorkerUrl' => Url::to(['/notifications/web-push-notification/service-worker']),
+            'subscribeUrl' => Url::to(['/notifications/web-push-notification/subscribe']),
+            'unsubscribeUrl' => Url::to(['/notifications/web-push-notification/unsubscribe']),
+            'subscribeLabel' => 'Subscribe',
+            'unsubscribeLabel' => 'Unsubscribe',
+        );
+    }
+
 
     /**
      * @inheritdoc
@@ -78,20 +97,25 @@ class WebNotifications extends \yii\base\Widget
         $this->registerAssets();
     }
 
+
     /**
      * @inheritdoc
      */
     protected function renderSubscribeButton()
     {
+
+        if($this->template) {
+            return $this->template;
+        }
+
         $html = Html::beginTag('p');
-            $html .= Html::beginTag('button', ['class' => 'js-web-push-subscribe-button', 'disabled' => 'disabled']);
-                $html .= "Subscribe";
-            $html .= Html::endTag('button');
+        $html .= Html::beginTag('button', ['id' => 'js-web-push-subscribe-button', 'disabled' => 'disabled']);
+        $html .= "Subscribe";
+        $html .= Html::endTag('button');
         $html .= Html::endTag('p');
 
         return $html;
     }
-
 
 
     /**
@@ -102,23 +126,8 @@ class WebNotifications extends \yii\base\Widget
         $view = $this->getView();
         WebNotificationsAsset::register($view);
 
-        $js = 'WebNotifications(' . Json::encode($this->getParams()) . ');';
+        $js = 'WebNotifications(' . Json::encode($this->getConfig()) . ');';
         $view->registerJs($js, View::POS_END);
     }
-
-    /**
-     * @return array
-     */
-    protected function getParams() {
-        return array(
-            'service_worker_filepath' => $this->serviceWorkerFilepath,
-            'vapid_pub_key' => $this->vapid_pub_key,
-            'subscribe_button_label' => $this->subscribeButtonLabel,
-            'unsubscribe_button_label' => $this->unsubscribeButtonLabel,
-            'subscribe_url' => $this->subscribeUrl,
-            'unsubscribe_url' => $this->unsubscribeUrl,
-        );
-    }
-
 
 }

@@ -2,15 +2,16 @@
 
 var WebNotifications = (function(opts) {
 
-    let service_worker_filepath = opts.service_worker_filepath || '/service-worker.js';
+    let service_worker_filepath = opts.serviceWorkerUrl;
+    let service_worker_scope = opts.serviceWorkerScope;
 
-    let SUBSCRIBE_URL = opts.subscribe_url;
-    let UNSUBSCRIBE_URL = opts.unsubscribe_url;
+    let SUBSCRIBE_URL = opts.subscribeUrl;
+    let UNSUBSCRIBE_URL = opts.unsubscribeUrl;
 
     let VAPID_PUB_KEY = opts.vapid_pub_key;
 
-    let subscribe_button_label = opts.subscribe_button_label || 'Subscribe';
-    let unsubscribe_button_label = opts.unsubscribe_button_label || 'Unsubscribe';
+    let subscribe_button_label = opts.subscribeLabel;
+    let unsubscribe_button_label = opts.unsubscribeLabel;
 
     let subscribeButton;
     //let permissionButton;
@@ -22,7 +23,7 @@ var WebNotifications = (function(opts) {
     window.addEventListener('load', function () {
 
         // permissionButton = document.querySelector('.js-grant-permission-button');
-        subscribeButton = document.querySelector('.js-web-push-subscribe-button');
+        subscribeButton = document.querySelector('#js-web-push-subscribe-button');
 
         if (!checkBrowserSupportNotification()) {
             return;
@@ -58,9 +59,11 @@ var WebNotifications = (function(opts) {
      * @returns {Promise<ServiceWorkerRegistration>}
      */
     function registerServiceWorker() {
-        return navigator.serviceWorker.register(service_worker_filepath)
+        return navigator.serviceWorker.register(service_worker_filepath, {
+            scope: service_worker_scope
+        })
             .then(function (registration) {
-                console.log('Service worker successfully registered.');
+                console.log('Service worker successfully registered. Scope (' + service_worker_scope + '): ' + registration.scope);
                 return registration;
             })
             .catch(function (err) {
@@ -86,14 +89,13 @@ var WebNotifications = (function(opts) {
             serviceWorkerRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
 
-                    if (!subscription) {
-                        return;
+                    if (subscription) {
+
+                        isSubscribed = true;
+
+                        // Keep server sync with the latest subscription
+                        sendSubscriptionToServer(subscription);
                     }
-
-                    isSubscribed = true;
-
-                    // Keep server sync with the latest subscription
-                    sendSubscriptionToServer(subscription);
 
                     // updateButtonPermissionStatus();
                     updateButtonSubscribeStatus();
