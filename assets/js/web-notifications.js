@@ -14,7 +14,6 @@ var WebNotifications = (function(opts) {
     let unsubscribe_button_label = opts.unsubscribeLabel;
 
     let subscribeButton;
-    //let permissionButton;
 
     let isAccessGranted = false;
     let isSubscribed = false;
@@ -22,7 +21,6 @@ var WebNotifications = (function(opts) {
 
     window.addEventListener('load', function () {
 
-        // permissionButton = document.querySelector('.js-grant-permission-button');
         subscribeButton = document.querySelector('#js-web-push-subscribe-button');
 
         if (!checkBrowserSupportNotification()) {
@@ -105,16 +103,6 @@ var WebNotifications = (function(opts) {
                 });
         });
 
-
-        // initialize page button for allow notifications
-        // permissionButton.addEventListener('click', function() {
-        //     if (isAccessGranted) {
-        //         revokePermission();
-        //     } else {
-        //         askPermission();
-        //     }
-        // });
-
         // initialize page button for subscribe notification
         subscribeButton.addEventListener('click', function () {
             if (isSubscribed) {
@@ -124,43 +112,10 @@ var WebNotifications = (function(opts) {
             }
         });
 
-        // enable buttons
-        // permissionButton.disabled = false;
+        // enable button
         subscribeButton.disabled = false;
 
-        // if(!isAccessGranted) {
-        //     askPermission();
-        // }
-
     }
-
-
-    /**
-     * ask notification permission
-     */
-    // function askPermission() {
-    //     // impossible to do!
-    // }
-
-
-    /**
-     * revoke notification permission
-     */
-    // function revokePermission() {
-    //    // impossible to do!
-    // }
-
-
-    /**
-     * update permission button status
-     */
-    // function updateButtonPermissionStatus() {
-    //     if (isAccessGranted) {
-    //         permissionButton.textContent = 'Disable Notification Access';
-    //     } else {
-    //         permissionButton.textContent = 'Grant Notification Access';
-    //     }
-    // }
 
 
     /**
@@ -181,7 +136,6 @@ var WebNotifications = (function(opts) {
     function unsubscribe() {
 
         // Disable the button so it can't be changed while we process the permission request
-        // permissionButton.disabled = true;
         subscribeButton.disabled = true;
 
         navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
@@ -205,7 +159,7 @@ var WebNotifications = (function(opts) {
                         });
                     }
 
-                    // TODO: Make a request to your server to remove
+                    // Make a request to your server to remove
                     // the users data from your data store so you
                     // don't attempt to send them push messages anymore
 
@@ -213,7 +167,6 @@ var WebNotifications = (function(opts) {
                     isSubscribed = false;
 
                     updateButtonSubscribeStatus();
-                    // permissionButton.disabled = false;
                     subscribeButton.disabled = false;
 
                     return sendUnsubscriptionToServer(pushSubscription);
@@ -233,7 +186,6 @@ var WebNotifications = (function(opts) {
     function subscribe() {
 
         // Disable the button so it can't be changed while we process the permission request
-        // permissionButton.disabled = true;
         subscribeButton.disabled = true;
 
         navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
@@ -248,7 +200,6 @@ var WebNotifications = (function(opts) {
                     isSubscribed = true;
 
                     updateButtonSubscribeStatus();
-                    // permissionButton.disabled = false;
                     subscribeButton.disabled = false;
 
                     return sendSubscriptionToServer(pushSubscription);
