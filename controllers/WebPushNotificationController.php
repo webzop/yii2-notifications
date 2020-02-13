@@ -57,7 +57,7 @@ class WebPushNotificationController extends Controller
             $subscriber = new WebPushSubscription();
             $subscriber->subscription = $subscription;
             $subscriber->endpoint = $endpoint;
-            $subscriber->user_id = 2;
+            $subscriber->user_id = $userId;
             $subscriber->save();
             $message = 'user subscribed';
         }
