@@ -1,15 +1,13 @@
 {
-    "name": "niciz/yii2-notifications",
+    "name": "webzop/yii2-notifications",
     "description": "Notifications module for Yii2",
     "type": "yii2-extension",
     "keywords": [
         "yii2",
         "yii2-notifications",
-        "yii2-web-notifications",
-        "yii2-screen-notifications",
-        "yii2-email-notifications"
+        "yii2-notifications-module",
+        "yii2-manage-notifications"
     ],
-    "homepage": "https://github.com/niciz/yii2-notifications",
     "authors": [
         {
             "name": "Gonçalo Esteves",
