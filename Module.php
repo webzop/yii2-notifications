@@ -10,6 +10,9 @@ class Module extends \yii\base\Module
 
     public $channels = [];
 
+    public $controllerNamespace = 'webzop\notifications\controllers';
+
+
     /**
      * Send a notification to all channels
      *
