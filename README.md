@@ -292,7 +292,8 @@ So you can call the Notifications widget in your app layout to show generated no
 ```
 
 You can customize the HTML template for the widget as follow. 
-When you customize the template remember to include a button with id 'js-web-push-subscribe-button':
+Setting template to false will hide all widget HTML and the browser will prompts the user to allow notifications.
+If you customize the HTML template remember to include a button with id 'js-web-push-subscribe-button':
 
 ```html
 <div>
