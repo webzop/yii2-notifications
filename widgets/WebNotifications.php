@@ -104,6 +104,9 @@ class WebNotifications extends \yii\base\Widget
     protected function renderSubscribeButton()
     {
 
+        if($this->template === false) {
+            return '';
+        }
         if($this->template) {
             return $this->template;
         }

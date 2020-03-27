@@ -104,16 +104,23 @@ var WebNotifications = (function(opts) {
         });
 
         // initialize page button for subscribe notification
-        subscribeButton.addEventListener('click', function () {
-            if (isSubscribed) {
-                unsubscribe();
-            } else {
+        if(subscribeButton) {
+            subscribeButton.addEventListener('click', function () {
+                if (isSubscribed) {
+                    unsubscribe();
+                } else {
+                    subscribe();
+                }
+            });
+
+            // enable button
+            subscribeButton.disabled = false;
+        }
+        else {
+            if (!isSubscribed) {
                 subscribe();
             }
-        });
-
-        // enable button
-        subscribeButton.disabled = false;
+        }
 
     }
 
@@ -136,7 +143,9 @@ var WebNotifications = (function(opts) {
     function unsubscribe() {
 
         // Disable the button so it can't be changed while we process the permission request
-        subscribeButton.disabled = true;
+        if(subscribeButton) {
+            subscribeButton.disabled = true;
+        }
 
         navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
             // To unsubscribe from push messaging, you need get the subscription object, which you can call unsubscribe() on.
@@ -167,7 +176,9 @@ var WebNotifications = (function(opts) {
                     isSubscribed = false;
 
                     updateButtonSubscribeStatus();
-                    subscribeButton.disabled = false;
+                    if(subscribeButton) {
+                        subscribeButton.disabled = false;
+                    }
 
                     return sendUnsubscriptionToServer(pushSubscription);
 
@@ -186,7 +197,9 @@ var WebNotifications = (function(opts) {
     function subscribe() {
 
         // Disable the button so it can't be changed while we process the permission request
-        subscribeButton.disabled = true;
+        if(subscribeButton) {
+            subscribeButton.disabled = true;
+        }
 
         navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
             serviceWorkerRegistration.pushManager.subscribe({
@@ -200,7 +213,9 @@ var WebNotifications = (function(opts) {
                     isSubscribed = true;
 
                     updateButtonSubscribeStatus();
-                    subscribeButton.disabled = false;
+                    if(subscribeButton) {
+                        subscribeButton.disabled = false;
+                    }
 
                     return sendSubscriptionToServer(pushSubscription);
 
