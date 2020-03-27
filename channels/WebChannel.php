@@ -144,11 +144,14 @@ class WebChannel extends Channel
             'TTL' => $notification->getTTL(),
         ));
 
-        $payload = array_merge($this->data, array(
-            'title' => $notification->getTitle(),
-            'body' => $notification->getDescription(),
-            'data' => $notification->getData(),
-        ));
+        $payload = array_merge(
+            $this->data,
+            $notification->getData(),
+            array(
+                'title' => $notification->getTitle(),
+                'body' => $notification->getDescription()
+            )
+        );
 
         if($tag = $notification->getTag()) {
             $payload['tag'] = $tag;
