@@ -5,11 +5,26 @@ namespace webzop\notifications\controllers;
 use http\Exception\InvalidArgumentException;
 use webzop\notifications\model\WebPushSubscription;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 
 class WebPushNotificationController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ]
+            ],
+        ];
+    }
 
     /**
      * @param \yii\base\Action $action
