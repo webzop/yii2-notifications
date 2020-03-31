@@ -3,6 +3,7 @@
 namespace webzop\notifications\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\db\Query;
 use yii\data\Pagination;
@@ -12,6 +13,21 @@ use webzop\notifications\widgets\Notifications;
 
 class DefaultController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ]
+            ],
+        ];
+    }
 
     public $layout = "@app/views/layouts/main";
 
