@@ -173,8 +173,19 @@ public function shouldSend($channel)
             return false;
         }
     }
-    return true;
+    return parent::shouldSend($channel);
 }
+```
+
+It is possible to limit the amount of same key/user notifications sent to a user through the `renotification_time` property of the notification.
+A new notification will be sent only if there aren't others with same user/key sent in the period specified in the property.
+`renotification_time` has to be a string accepted by [DateInterval::__constructor()](https://php.net/manual/en/dateinterval.construct.php).
+
+```php
+// For example to limit to 1 notification per hour
+$notification = AccountNotification::create(AccountNotification::KEY_RESET_PASSWORD, ['user' => $user]);
+$notification->renotification_time = 'PT1H';
+$notification->send();
 ```
 
 ### Specifying The Send For Specific Channel
