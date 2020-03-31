@@ -40,6 +40,9 @@ class Module extends \yii\base\Module
                     $channel->send(clone $notification);
                 }
             } catch (\Exception $e) {
+                if (YII_DEBUG) {
+                    throw $e;
+                }
                 Yii::warning("Notification sended by channel '$id' has failed: " . $e->getMessage(), __METHOD__);
                 Yii::warning($e, __METHOD__);
             }
