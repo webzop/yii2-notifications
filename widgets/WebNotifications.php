@@ -51,8 +51,8 @@ class WebNotifications extends \yii\base\Widget
 
 
         // set VAPID public key
-        if(empty($module->channels['web']['auth']['VAPID']['publicKey'])) {
-            throw new Exception('Invalid Module configuration: Missing VAPID public key.');
+        if($module->channels['web']['enable'] && empty($module->channels['web']['auth']['VAPID']['publicKey'])) {
+            throw new Exception('Invalid configuration for module Notification: Missing VAPID keys. Please see the readme.txt to configure correctly your application.');
         }
         $this->_vapidPubKey = $module->channels['web']['auth']['VAPID']['publicKey'];
 
@@ -93,8 +93,13 @@ class WebNotifications extends \yii\base\Widget
      */
     public function run()
     {
-        echo $this->renderSubscribeButton();
-        $this->registerAssets();
+        // override defaults with config params
+        $module = Yii::$app->getModule('notifications');
+
+        if($module->channels['web']['enable']) {
+            echo $this->renderSubscribeButton();
+            $this->registerAssets();
+        }
     }
 
 
