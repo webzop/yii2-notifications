@@ -20,7 +20,12 @@ class WebPushNotificationController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                    ]
+                        'actions' => ['subscribe', 'unsubscribe'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['service-worker']
+                    ],
                 ]
             ],
         ];
