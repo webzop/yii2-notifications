@@ -103,7 +103,7 @@ class WebNotifications extends \yii\base\Widget
         // override defaults with config params
         $module = Yii::$app->getModule('notifications');
 
-        if($module->channels['web']['enable']) {
+        if(ArrayHelper::getValue($module->channels['web'], 'enable')) {
             echo $this->renderSubscribeButton();
             $this->registerAssets();
         }
