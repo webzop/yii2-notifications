@@ -95,8 +95,9 @@ var WebNotifications = (function(opts) {
                         sendSubscriptionToServer(subscription);
                     }
 
-                    // updateButtonPermissionStatus();
-                    updateButtonSubscribeStatus();
+                    if(subscribeButton) {
+                        updateButtonSubscribeStatus();
+                    }
                 })
                 .catch(function (err) {
                     console.log('Error getting user subscription', err);
@@ -175,8 +176,8 @@ var WebNotifications = (function(opts) {
                     console.log('Successfully Unsubscribe');
                     isSubscribed = false;
 
-                    updateButtonSubscribeStatus();
                     if(subscribeButton) {
+                        updateButtonSubscribeStatus();
                         subscribeButton.disabled = false;
                     }
 
@@ -212,8 +213,8 @@ var WebNotifications = (function(opts) {
                     console.log('Successfully Subscribe');
                     isSubscribed = true;
 
-                    updateButtonSubscribeStatus();
                     if(subscribeButton) {
+                        updateButtonSubscribeStatus();
                         subscribeButton.disabled = false;
                     }
 

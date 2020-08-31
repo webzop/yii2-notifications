@@ -88,6 +88,8 @@ Notifications is often used as an application module and configured in the appli
 
 To enable Web Push Notifications browsers is needed to verify your identity. A standard called VAPID can authenticate the application for all browsers. You'll need to create and provide a public and private key for your server. These keys must be safely stored and should not change.
 
+If you want to disable the Web Push Notifications simply set the flag 'notifications.web.enable' to false.
+
 In order to generate the uncompressed public and secret key, encoded in Base64, enter the following in your Linux bash:
 
 ```
