@@ -88,10 +88,12 @@ abstract class Notification extends \yii\base\BaseObject
         // The notification can be sent if there aren't others with same user/key sent in the period specified in
         // renotification_time params
         $end = static::getLimit($this->renotification_time)->getTimestamp();
+        $className = $this->className();
         $notifications = Notifications::find()
             ->andWhere([
-                'user_id' => $this->userId,
-                'key'    => $this->key,
+                'user_id'   => $this->userId,
+                'key'       => $this->key,
+                'class'     => strtolower(substr($className, strrpos($className, '\\')+1, -12)),
             ])
             ->andWhere(['>', 'created_at', $end])
             ->andWhere(['<', 'created_at', $margin])

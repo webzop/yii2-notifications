@@ -3,7 +3,9 @@
 namespace webzop\notifications\widgets;
 
 use Exception;
+use webzop\notifications\channels\WebChannel;
 use webzop\notifications\WebNotificationsAsset;
+use yetopen\helpers\ArrayHelper;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -44,17 +46,22 @@ class WebNotifications extends \yii\base\Widget
         // override defaults with config params
         $module = Yii::$app->getModule('notifications');
 
-        if(!empty($module->channels['web']['config'])) {
-            $module_config = $module->channels['web']['config'];
+        /** @var WebChannel|array $webChannel */
+        $webChannel = $module->channels['web'];
+
+        // we have to use array helper because in some instances yii create the channel as a WebChannel object and others
+        // as an array
+        if(!empty(ArrayHelper::getValue($webChannel, 'config'))) {
+            $module_config = ArrayHelper::getValue($webChannel, 'config');
             $this->_config = array_merge($this->_config, $module_config);
         }
 
 
         // set VAPID public key
-        if(empty($module->channels['web']['auth']['VAPID']['publicKey'])) {
+        if(empty(ArrayHelper::getValue($webChannel, 'auth.VAPID.publicKey'))) {
             throw new Exception('Invalid Module configuration: Missing VAPID public key.');
         }
-        $this->_vapidPubKey = $module->channels['web']['auth']['VAPID']['publicKey'];
+        $this->_vapidPubKey = ArrayHelper::getValue($webChannel, 'auth.VAPID.publicKey');
 
     }
 
