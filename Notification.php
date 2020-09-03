@@ -2,7 +2,9 @@
 
 namespace webzop\notifications;
 
+use webzop\notifications\model\Notifications;
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * This is the base class for a notification.
@@ -20,6 +22,38 @@ abstract class Notification extends \yii\base\BaseObject
     public $data = [];
 
     /**
+     * @var string|null
+     */
+    public $tag = null;
+
+    /**
+     * @var string|null
+     */
+    public $priority = null;
+
+    /**
+     * @var string|null
+     */
+    public $ttl = null;
+
+
+    const PRIORITY_LOWEST = 'very-low';
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_NORMAL = 'normal';
+    const PRIORITY_HIGH = 'high';
+
+
+    const DEFAULT_TTL = 7200;               // [in seconds]. 7200 = valid for two hours
+
+    /**
+     * Time that has to pass until a notification with same user and key con be sent again.
+     * It has to be a string that can be passed to @see \DateInterval (@link http://php.net/manual/en/dateinterval.construct.php)
+     * If FALSE, this control is disabled
+     * @var string
+     */
+    protected $renotification_time = FALSE;
+
+    /**
      * Create an instance
      *
      * @param string $key
@@ -35,12 +69,37 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Determines if the notification can be sent.
      *
-     * @param  \webzop\notifications\Channel $channel
+     * @param Channel $channel
      * @return bool
+     * @throws \Exception
      */
     public function shouldSend($channel)
     {
-        return true;
+        // If the renotification_time params is false we don't need to check the interval
+        if (empty($this->renotification_time)) {
+            return TRUE;
+        }
+
+        // Workaround:
+        // After the notification on the screen channel, the next are not sent because it finds the one just sent.
+        // Adds 1 second to solve this problem.
+        $margin = static::getLimit('PT1S')->getTimestamp();
+
+        // The notification can be sent if there aren't others with same user/key sent in the period specified in
+        // renotification_time params
+        $end = static::getLimit($this->renotification_time)->getTimestamp();
+        $className = $this->className();
+        $notifications = Notifications::find()
+            ->andWhere([
+                'user_id'   => $this->userId,
+                'key'       => $this->key,
+                'class'     => strtolower(substr($className, strrpos($className, '\\')+1, -12)),
+            ])
+            ->andWhere(['>', 'created_at', $end])
+            ->andWhere(['<', 'created_at', $margin])
+            ->exists();
+
+        return !$notifications;
     }
 
     /**
@@ -80,6 +139,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sets notification data
      *
+     * @param array $data
      * @return self
      */
     public function setData($data = []){
@@ -88,9 +148,76 @@ abstract class Notification extends \yii\base\BaseObject
     }
 
     /**
+     * Gets notification tag
+     *
+     * @return string|null
+     */
+    public function getTag(){
+        return $this->tag;
+    }
+
+    /**
+     * Sets notification tag
+     *
+     * @param string|null $tag
+     * @return self
+     */
+    public function setTag($tag = null){
+        $this->tag = $tag;
+        return $this;
+    }
+
+    /**
+     * Sets notification priority
+     *
+     * @param string $priority
+     * @return self
+     */
+    public function setPriority($priority){
+        $this->priority = $priority;
+        return $this;
+    }
+
+    /**
+     * Gets notification priority
+     *
+     * @return string
+     */
+    public function getPriority(){
+        if($this->priority) {
+            return $this->priority;
+        }
+        return Notification::PRIORITY_NORMAL;
+    }
+
+    /**
+     * Sets notification TTL
+     *
+     * @param string $ttl
+     * @return self
+     */
+    public function setTTL($ttl){
+        $this->ttl = $ttl;
+        return $this;
+    }
+
+    /**
+     * Gets notification TTL
+     *
+     * @return string
+     */
+    public function getTTL(){
+        if($this->ttl) {
+            return $this->ttl;
+        }
+        return Notification::DEFAULT_TTL;
+    }
+
+
+    /**
      * Gets the UserId
      *
-     * @return array
+     * @return int
      */
     public function getUserId(){
         return $this->userId;
@@ -99,6 +226,7 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sets the UserId
      *
+     * @param int $id
      * @return self
      */
     public function setUserId($id){
@@ -109,13 +237,39 @@ abstract class Notification extends \yii\base\BaseObject
     /**
      * Sends this notification to all channels
      *
-     * @param string $key The key of the notification
-     * @param integer $userId The user id that will get the notification
-     * @param array $data Additional data information
-     * @throws \Exception
      */
     public function send(){
-        Yii::$app->getModule('notifications')->send($this);
+        $module = Yii::$app->getModule('notifications');
+        if(is_null($module)) {
+            throw new InvalidConfigException("Please set up the module in the web/console settings, see README for instructions");
+        }
+        $module->send($this);
     }
 
+    /**
+     * Calculate a time limit subtractive the interval to the current moment
+     * @param string $time interval, string passed to the constructor of \DateInterval
+     * @return \DateTime
+     * @throws \Exception
+     */
+    public static function getLimit($time)
+    {
+        return (new \DateTime())->sub(new \DateInterval($time));
+    }
+
+    /**
+     * @return string
+     */
+    public function getRenotificationTime(): string
+    {
+        return $this->renotification_time;
+    }
+
+    /**
+     * @param string $renotification_time
+     */
+    public function setRenotificationTime(string $renotification_time): void
+    {
+        $this->renotification_time = $renotification_time;
+    }
 }
