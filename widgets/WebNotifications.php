@@ -5,7 +5,7 @@ namespace webzop\notifications\widgets;
 use Exception;
 use webzop\notifications\channels\WebChannel;
 use webzop\notifications\WebNotificationsAsset;
-use yetopen\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
