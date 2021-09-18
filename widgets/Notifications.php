@@ -15,6 +15,14 @@ class Notifications extends \yii\base\Widget
 {
 
     public $options = ['class' => 'dropdown nav-notifications'];
+    public $linkOptions = [
+        'href' => '#', 
+        'class' => 'dropdown-toggle', 
+        'data-toggle' => 'dropdown'
+    ];
+    public $spanOptions = [
+        'class' => 'glyphicon glyphicon-bell'
+    ];
 
     /**
      * @var string the HTML options for the item count tag. Key 'tag' might be used here for the tag name specification.
@@ -68,8 +76,8 @@ class Notifications extends \yii\base\Widget
     protected function renderNavbarItem()
     {
         $html  = Html::beginTag('li', $this->options);
-        $html .= Html::beginTag('a', ['href' => '#', 'class' => 'dropdown-toggle', 'data-toggle' => 'dropdown']);
-        $html .= Html::tag('span', '', ['class' => 'glyphicon glyphicon-bell']);
+        $html .= Html::beginTag('a', $this->linkOptions);
+        $html .= Html::tag('span', '', $this->spanOptions);
 
         $count = self::getCountUnseen();
         $countOptions = array_merge([
