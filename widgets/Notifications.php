@@ -120,9 +120,12 @@ class Notifications extends \yii\base\Widget
             'url' => Url::to(['/notifications/default/list']),
             'countUrl' => Url::to(['/notifications/default/count']),
             'readUrl' => Url::to(['/notifications/default/read']),
+            'unreadUrl' => Url::to(['/notifications/default/unread']),
             'readAllUrl' => Url::to(['/notifications/default/read-all']),
             'xhrTimeout' => Html::encode($this->xhrTimeout),
             'pollInterval' => Html::encode($this->pollInterval),
+            'readLabel' => Yii::t('modules/notifications', 'Mark as unread'),
+            'markAsReadLabel' => Yii::t('modules/notifications', 'Mark as read'),
         ], $this->clientOptions);
 
         $js = 'Notifications(' . Json::encode($this->clientOptions) . ');';

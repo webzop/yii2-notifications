@@ -18,12 +18,12 @@ class WebPushNotificationController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
                         'actions' => ['subscribe', 'unsubscribe'],
                     ],
                     [
-                        'allow' => true,
+                        'allow'   => true,
                         'actions' => ['service-worker']
                     ],
                 ]
@@ -49,18 +49,18 @@ class WebPushNotificationController extends Controller
     public function actionSubscribe()
     {
         $userId = null;
-        if(Yii::$app->getUser()) {
+        if (Yii::$app->getUser()) {
             $userId = Yii::$app->getUser()->getId();
         }
 
         $request = Yii::$app->request;
         $subscription = $request->getRawBody();
 
-        if(empty($subscription)) {
+        if (empty($subscription)) {
             throw new InvalidArgumentException('Missing subscription data');
         }
 
-        $decoded = json_decode($subscription);
+        $decoded = json_decode($subscription, false);
         $endpoint = $decoded->endpoint;
 
         // check if exists a subscriber with the same endpoint
@@ -68,12 +68,11 @@ class WebPushNotificationController extends Controller
 
         $message = '';
 
-        if($subscriber) {
+        if ($subscriber) {
             $subscriber->subscription = $subscription;
             $subscriber->save();
             $message = 'user subscription updated';
-        }
-        else {
+        } else {
             $subscriber = new WebPushSubscription();
             $subscriber->subscription = $subscription;
             $subscriber->endpoint = $endpoint;
@@ -101,16 +100,16 @@ class WebPushNotificationController extends Controller
         $request = Yii::$app->request;
         $subscription = $request->getRawBody();
 
-        if(empty($subscription)) {
+        if (empty($subscription)) {
             throw new InvalidArgumentException('Missing subscription data');
         }
 
-        $decoded = json_decode($subscription);
+        $decoded = json_decode($subscription, false);
         $endpoint = $decoded->endpoint;
 
         $subscriber = WebPushSubscription::findOne(['endpoint' => $endpoint]);
 
-        if($subscriber) {
+        if ($subscriber) {
             $subscriber->delete();
         }
 
@@ -126,14 +125,15 @@ class WebPushNotificationController extends Controller
     /**
      * @return \yii\console\Response|Response
      */
-    public function actionServiceWorker() {
+    public function actionServiceWorker()
+    {
         $app_root = Yii::getAlias("@app");
 
         $filepath = '/service-worker.js';
 
         $module = Yii::$app->getModule('notifications');
 
-        if(!empty($module->channels['web']['config']['serviceWorkerFilepath'])) {
+        if (!empty($module->channels['web']['config']['serviceWorkerFilepath'])) {
             $filepath = $module->channels['web']['config']['serviceWorkerFilepath'];
         }
 

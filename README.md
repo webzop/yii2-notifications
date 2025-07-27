@@ -10,14 +10,12 @@ Notifications are short messages that notify users of something that occurred in
 Requirements
 ------------
 
-- PHP 7.1+
+- PHP 8.1+
     - gmp
     - mbstring
     - curl
     - openssl
     
-- PHP 7.2+ is recommended for better performance.
-
 Installation
 ------------
 

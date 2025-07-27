@@ -22,6 +22,7 @@ return [
     'Delete all' => 'Eliminar todas',
     'Mark all as read' => 'Marcar todas como leidas',
     'Mark as read' => 'Marcar como leida',
+    'Mark as unread' => 'Marcar como no leida',
     'Notifications' => 'Notificaciones',
     'Read' => 'Leer',
     'There are no notifications to show' => 'No hay notificaciones para mostrar',
